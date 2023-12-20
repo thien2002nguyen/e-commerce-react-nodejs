@@ -4,7 +4,6 @@ const { generateAccessToken, generateRefreshToken } = require('../middlewares/jw
 const jwt = require('jsonwebtoken')
 const sendMail = require('../ultils/sendMail')
 const crypto = require('crypto')
-const { response } = require('express')
 
 const register = asyncHandler(async (req, res) => {
     const { email, password, firstname, lastname } = req.body
@@ -80,7 +79,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     // lấy token từ cookies
     const cookie = req.cookies
     // check trong cookies có refresh token không
-    if (!cookie && !cookie?.refreshToken) {
+    if (!cookie?.refreshToken) {
         throw new Error('No refresh token in cookies')
     }
     // check token có hợp lệ hay không
@@ -198,9 +197,6 @@ const updateUser = asyncHandler(async (req, res) => {
     const { _id } = req.user
     if (!_id || Object.keys(req.body).length === 0) {
         throw new Error('Missing inputs')
-    }
-    if (req.body.role) {
-        throw new Error('Can not update role')
     }
     const response = await User.findByIdAndUpdate(_id, req.body, { new: true }).select('-refreshToken -password -role')
     return res.status(200).json({
