@@ -31,7 +31,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
     const response = await BlogCategory.findByIdAndDelete(bcid)
     return res.status(200).json({
         success: response ? true : false,
-        updatedCategory: response ? response : 'Can not delete blog category'
+        deleteCategory: response ? response : 'Can not delete blog category'
     })
 })
 
