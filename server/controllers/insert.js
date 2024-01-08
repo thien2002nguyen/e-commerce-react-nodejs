@@ -11,12 +11,14 @@ const fn = async (product) => {
         slug: slugify(product?.name) + Math.round(Math.random() * 1000) + '',
         description: product?.description,
         brand: product?.brand,
+        thumb: product?.thumb,
         price: Math.round(Number(product?.price?.match(/\d/g).join('')) / 100),
         category: product?.category[1],
         quantity: Math.round(Math.random() * 100),
         sold: Math.round(Math.random() * 100),
         images: product?.images,
-        color: product?.variants?.find(element => element.label === 'Color')?.variants[0]
+        color: product?.variants?.find(element => element.label === 'Color')?.variants[0],
+        totalRatings: Math.round(Math.random() * 5)
     })
 }
 
