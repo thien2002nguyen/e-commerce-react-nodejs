@@ -1,49 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { apiGetProducts } from '../apis/products';
-import { Product } from './'
-import Slider from "react-slick";
+import { CustomSlider } from './'
+import { getNewProducts } from '../store/products/asyncActions';
+import { useDispatch, useSelector } from 'react-redux';
 
 const tabs = [
-    { id: 0, name: 'best sellers' },
-    { id: 1, name: 'new arrivals' },
+    { id: 'best', name: 'best sellers' },
+    { id: 'new', name: 'new arrivals' },
 ]
-
-const settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1
-};
 
 const BestSeller = () => {
     const [bestSellers, setBestSellers] = useState(null)
-    const [newProducts, setNewProducts] = useState(null)
-    const [activedTab, setActivedTab] = useState(0)
-    const [product, setProduct] = useState(null)
+    const [activedTab, setActivedTab] = useState('best')
+    const [products, setProducts] = useState(null)
+    const dispatch = useDispatch()
+    const { newProducts } = useSelector(state => state.products)
     const fetchProduct = async () => {
-        const response = await Promise.all([apiGetProducts({ sort: '-sold' }), apiGetProducts({ sort: '-createdAt' })])
-        if (response && response[0]?.success) {
-            setBestSellers(response[0].products)
-        }
-        if (response && response[1]?.success) {
-            setNewProducts(response[1].products)
+        const response = await apiGetProducts({ sort: '-sold' })
+        if (response && response.success) {
+            setBestSellers(response.products)
+            setProducts(response.products)
         }
     }
     useEffect(() => {
         fetchProduct()
-    }, [])
+        dispatch(getNewProducts())
+    }, [dispatch])
     useEffect(() => {
-        if (activedTab === 0) {
-            setProduct(bestSellers)
+        if (activedTab === 'best') {
+            setProducts(bestSellers)
         }
-        if (activedTab === 1) {
-            setProduct(newProducts)
+        if (activedTab === 'new') {
+            setProducts(newProducts)
         }
     }, [activedTab, bestSellers, newProducts])
     return (
         <div>
-            <div className='flex text-[20px] pb-4 border-b-2 border-main gap-4'>
+            <div className='flex text-[20px] gap-4 border-main border-b-2 pb-4'>
                 {tabs.map((element, index) => (
                     <span
                         key={index}
@@ -56,11 +49,7 @@ const BestSeller = () => {
                 ))}
             </div>
             <div className='mt-4 mx-[-10px]'>
-                <Slider {...settings}>
-                    {product?.map((element, index) => (
-                        <Product key={index} productData={element} isNew={activedTab === 1} />
-                    ))}
-                </Slider>
+                <CustomSlider products={products} activedTab={activedTab} />
             </div>
             <div className='w-full flex gap-4 mt-4'>
                 <img

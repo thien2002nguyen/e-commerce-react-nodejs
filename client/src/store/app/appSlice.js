@@ -5,7 +5,8 @@ export const appSlice = createSlice({
     name: 'app',
     initialState: {
         categories: null,
-        isLoading: false
+        isLoading: false,
+        errorMessage: ''
     },
     reducers: {
 

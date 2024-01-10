@@ -3,7 +3,7 @@ import { MdEmail, MdMenu } from 'react-icons/md'
 import { BsHandbagFill } from 'react-icons/bs'
 import { FaUserCircle } from 'react-icons/fa'
 import { AiFillHome, AiFillStar, AiOutlineStar, AiFillEye } from 'react-icons/ai'
-import { IoMdHeart } from "react-icons/io";
+import { IoMdHeart, IoIosArrowForward } from "react-icons/io";
 
 const icons = {
     RiPhoneFill,
@@ -16,6 +16,7 @@ const icons = {
     AiFillEye,
     MdMenu,
     IoMdHeart,
+    IoIosArrowForward,
 }
 
 export default icons

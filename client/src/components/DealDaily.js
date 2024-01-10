@@ -35,7 +35,6 @@ const DealDaily = () => {
         idInterval && clearInterval(idInterval)
         fetchDealDaily()
     }, [expireTime])
-
     useEffect(() => {
         idInterval = setInterval(() => {
             if (second > 0) {

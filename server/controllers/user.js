@@ -6,17 +6,17 @@ const sendMail = require('../ultils/sendMail')
 const crypto = require('crypto')
 
 const register = asyncHandler(async (req, res) => {
-    const { email, password, firstname, lastname } = req.body
+    const { email, password, firstname, lastname, phone } = req.body
     // kiểm tra dữ liệu truyền lên
-    if (!email || !password || !firstname || !lastname) {
+    if (!email || !password || !firstname || !lastname || !phone) {
         return res.status(400).json({
             success: false,
             mes: 'Missing inputs'
         })
     }
-    // check email tồn tại hay không
-    const user = await User.findOne({ email })
-    if (user) {
+    // check email và phone tồn tại hay không
+    const response = await User.findOne({ email }) || await User.findOne({ phone })
+    if (response) {
         throw new Error('User has existed')
     }
     else {
@@ -32,16 +32,17 @@ const register = asyncHandler(async (req, res) => {
 // Refresh token => cấp mới access token
 // Access token => xác thực người dùng và phân quyền
 const login = asyncHandler(async (req, res) => {
-    const { email, password } = req.body
+    const { email, password, phone } = req.body
     // check dữ liệu truyền lên
-    if (!email || !password) {
+    const isData = email || phone
+    if (!isData || !password) {
         return res.status(400).json({
             success: false,
             mes: 'Missing inputs'
         })
     }
-    // check email tồn tại hay không
-    const response = await User.findOne({ email })
+    // check email hay phone tồn tại hay không
+    const response = await User.findOne({ email: isData }) || await User.findOne({ phone: isData })
     // check password đúng hay sai
     if (response && await response?.isCorrectPassword(password)) {
         // tách password và role ra khỏi response
