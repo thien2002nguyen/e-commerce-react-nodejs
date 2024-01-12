@@ -8,11 +8,11 @@ const { IoIosArrowForward } = icons
 const Home = () => {
     const { newProducts } = useSelector(state => state.products)
     const { categories } = useSelector(state => state.app)
-    const { isLoggedIn, current } = useSelector(state => state.user)
-    console.log({ isLoggedIn, current });
+    // const { isLoggedIn, current } = useSelector(state => state.user)
+    // console.log({ isLoggedIn, current });
     return (
-        <>
-            <div className='w-main flex'>
+        <div className='w-main mx-auto'>
+            <div className='w-full flex mt-4'>
                 <div className='flex flex-col gap-5 w-1/4 flex-auto'>
                     <Sidebar />
                     <DealDaily />
@@ -22,7 +22,7 @@ const Home = () => {
                     <BestSeller />
                 </div>
             </div>
-            <div className='my-8'>
+            <div className='w-full my-8'>
                 <FeatureProducts />
             </div>
             <div className='my-8 w-full'>
@@ -63,7 +63,7 @@ const Home = () => {
                     BLOG POSTS
                 </h3>
             </div>
-        </>
+        </div>
     );
 };
 

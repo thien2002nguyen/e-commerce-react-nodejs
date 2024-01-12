@@ -18,7 +18,7 @@ const DealDaily = () => {
         const response = await apiGetProducts({ limit: 1, page: Math.round(Math.random() * 7), totalRatings: 5 })
         if (response.success) {
             setDealDaily(response.products[0])
-            const today = `${moment().format('MM/DD/YYYY')} 5:00:00`
+            const today = `${moment().format('MM/DD/YYYY')} 0:00:00`
             const seconds = new Date(today).getTime() - new Date().getTime() + 24 * 3600 * 1000
             const number = secondsToHsm(seconds)
             setHour(number.h)

@@ -4,7 +4,31 @@ const { generateAccessToken, generateRefreshToken } = require('../middlewares/jw
 const jwt = require('jsonwebtoken')
 const sendMail = require('../ultils/sendMail')
 const crypto = require('crypto')
+const makeToken = require('uniqid')
 
+// const register = asyncHandler(async (req, res) => {
+//     const { email, password, firstname, lastname, phone } = req.body
+//     // kiểm tra dữ liệu truyền lên
+//     if (!email || !password || !firstname || !lastname || !phone) {
+//         return res.status(400).json({
+//             success: false,
+//             mes: 'Missing inputs'
+//         })
+//     }
+//     // check email và phone tồn tại hay không
+//     const response = await User.findOne({ email }) || await User.findOne({ phone })
+//     if (response) {
+//         throw new Error('User has existed')
+//     }
+//     else {
+//         // tạo tài khoản người dùng mới
+//         const newUser = await User.create(req.body)
+//         return res.status(200).json({
+//             success: newUser ? true : false,
+//             mes: newUser ? 'Register is successfully. Please go login' : 'Something went wrong'
+//         })
+//     }
+// })
 const register = asyncHandler(async (req, res) => {
     const { email, password, firstname, lastname, phone } = req.body
     // kiểm tra dữ liệu truyền lên
@@ -14,35 +38,59 @@ const register = asyncHandler(async (req, res) => {
             mes: 'Missing inputs'
         })
     }
-    // check email và phone tồn tại hay không
+    // check email hoặc phone tồn tại hay không
     const response = await User.findOne({ email }) || await User.findOne({ phone })
     if (response) {
         throw new Error('User has existed')
     }
     else {
-        // tạo tài khoản người dùng mới
-        const newUser = await User.create(req.body)
+        const token = makeToken()
+        res.cookie('dataRegister', { ...req.body, token }, { httpOnly: true, maxAge: 15 * 60 * 1000 })
+        const html = `Click the link to complete the account registration process.
+            This link will expire 15 minutes from now 
+            <a href=${process.env.URL_SERVER}/api/user/finalregister/${token}>Click here</a>`
+        await sendMail({ email, html, subject: 'Success Register Digital World' })
         return res.status(200).json({
-            success: newUser ? true : false,
-            mes: newUser ? 'Register is successfully. Please go login' : 'Something went wrong'
+            success: true,
+            mes: 'Please check your email to active account'
         })
     }
 })
-
+const finalRegister = asyncHandler(async (req, res) => {
+    const cookie = req.cookies
+    const { token } = req.params
+    if (!cookie || cookie?.dataRegister?.token !== token) {
+        res.clearCookie('dataRegister')
+        return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+    }
+    const newUser = await User.create({
+        email: cookie?.dataRegister?.email,
+        password: cookie?.dataRegister?.password,
+        phone: cookie?.dataRegister?.phone,
+        firstname: cookie?.dataRegister?.firstname,
+        lastname: cookie?.dataRegister?.lastname,
+    })
+    res.clearCookie('dataRegister')
+    if (newUser) {
+        return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`)
+    }
+    else {
+        return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+    }
+})
 // Refresh token => cấp mới access token
 // Access token => xác thực người dùng và phân quyền
 const login = asyncHandler(async (req, res) => {
-    const { email, password, phone } = req.body
+    const { email, password } = req.body
     // check dữ liệu truyền lên
-    const isData = email || phone
-    if (!isData || !password) {
+    if (!email || !password) {
         return res.status(400).json({
             success: false,
             mes: 'Missing inputs'
         })
     }
     // check email hay phone tồn tại hay không
-    const response = await User.findOne({ email: isData }) || await User.findOne({ phone: isData })
+    const response = await User.findOne({ email })
     // check password đúng hay sai
     if (response && await response?.isCorrectPassword(password)) {
         // tách password và role ra khỏi response
@@ -122,7 +170,7 @@ const logout = asyncHandler(async (req, res) => {
 
 const forgotPassword = asyncHandler(async (req, res) => {
     // client gửi email
-    const { email } = req.query
+    const { email } = req.body
     // check email có được gửi lên hay không
     if (!email) {
         throw new Error('Missing email')
@@ -136,17 +184,19 @@ const forgotPassword = asyncHandler(async (req, res) => {
     const resetToken = user.createPasswordChangedToken()
     await user.save()
     // gửi email để reset password
-    const html = `Vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn. 
-    Link này sẽ hết hạn sau 15 phút kể từ bây giờ 
-    <a href=${process.env.URL_SERVER}/api/user/reset-password/${resetToken}>Click here</a>`
+    const html = `Click the link to change your account password.  
+        This link will expire 15 minutes from now 
+        <a href=${process.env.CLIENT_URL}/resetpassword/${resetToken}>Click here</a>`
     const data = {
         email,
-        html
+        html,
+        subject: 'Forgot Password'
     }
     const rs = await sendMail(data)
     return res.status(200).json({
-        success: true,
-        rs
+        success: rs?.response?.includes('OK') ? true : false,
+        mes: rs?.response?.includes('OK') ? 'Please check your email to active account'
+            : 'Something went wrong. Please try later'
     })
 })
 
@@ -279,4 +329,5 @@ module.exports = {
     updateUserByAdmin,
     updateUserAddress,
     updateCart,
+    finalRegister,
 }

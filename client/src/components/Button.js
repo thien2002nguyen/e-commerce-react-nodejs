@@ -1,16 +1,14 @@
 import React, { memo } from 'react';
 
-const Button = ({ name, type, handleOnClick, style, iconBefore, iconAfter, fullWidth }) => {
+const Button = ({ children, handleOnClick, customStyle, fullWidth }) => {
     return (
         <button
-            type={type || 'button'}
-            className={style ? style : `px-4 py-2 rounded-md text-white my-2 bg-[#cd3131] hover:bg-main
-                duration-200 font-semibold ${fullWidth ? 'w-full' : ''}`}
+            type='button'
+            className={customStyle ? customStyle : `px-4 py-2 rounded-md text-white my-2 bg-[red] hover:bg-main
+                duration-200 ${fullWidth ? 'w-full' : ''}`}
             onClick={() => { handleOnClick && handleOnClick() }}
         >
-            {iconBefore}
-            <span>{name}</span>
-            {iconAfter}
+            {children}
         </button>
     );
 };
