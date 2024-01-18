@@ -1,13 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { apiGetProduct } from '../../apis/products';
-import { Breadcrumb, Button, SelectQuantity } from '../../components';
+import { apiGetProduct, apiGetProducts } from '../../apis/products';
+import { Breadcrumb, Button, CustomSlider, ProductExtraInfoItem, ProductInfomatin, SelectQuantity } from '../../components';
 import Slider from "react-slick";
 import { formatMoney, renderStartFromNumber } from '../../ultils/helpers'
+import icons from '../../ultils/icons';
+
+const {
+    BsShieldShaded,
+    RiTruckFill,
+    AiFillGift,
+    MdReply,
+    FaTty,
+} = icons
 
 const settings = {
     dots: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
@@ -17,23 +26,35 @@ const DetailProduct = () => {
     const { pid, title, category } = useParams()
     const [product, setProduct] = useState(null)
     const [quantity, setQuantity] = useState(1)
+    const [relatedProducts, setRelatedProduct] = useState(null)
     const fetchProductData = async (pid) => {
         const response = await apiGetProduct(pid)
         if (response.success) {
             setProduct(response.productData)
         }
     }
+    const fetchProducts = async (category) => {
+        const response = await apiGetProducts({ category })
+        if (response.success) {
+            setRelatedProduct(response.products)
+        }
+    }
     useEffect(() => {
+
         if (pid) {
             fetchProductData(pid)
+            fetchProducts(category)
         }
-    }, [pid])
+    }, [pid, category])
     const handleQuantity = useCallback((number) => {
         if (!Number(number) || Number(number) < 1) {
             setQuantity(1)
         }
+        else if (Number(number) > 99) {
+            setQuantity(99)
+        }
         else {
-            setQuantity(number)
+            setQuantity(number.trim())
         }
     }, [])
     const handleChangeQuantity = useCallback((flag) => {
@@ -53,14 +74,14 @@ const DetailProduct = () => {
         <div className='w-full'>
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
                 <div className='w-main'>
-                    <h3>{title}</h3>
+                    <h3 className='font-semibold text-[18px] mb-2'>{title}</h3>
                     <Breadcrumb title={title} category={category} />
                 </div>
             </div>
             <div className='w-main m-auto mt-5 grid grid-cols-5 gap-4 mb-5'>
                 <div className='col-span-2 flex flex-col'>
                     <img src={product?.thumb} alt="product" className='border w-[458px] h-[458px] object-contain' />
-                    <div className='w-[466px] h-[143px] mt-4'>
+                    <div className='w-[466px] mt-4'>
                         <Slider className='detail-slick' {...settings}>
                             {product?.images?.map((element, index) => (
                                 <div key={index} className='w-full pe-2'>
@@ -97,7 +118,24 @@ const DetailProduct = () => {
                         <Button fullWidth>Add to Cart</Button>
                     </div>
                 </div>
-                <div className='col-span-1 border'>information</div>
+                <div className='col-span-1 flex flex-col gap-3'>
+                    <ProductExtraInfoItem icon={<BsShieldShaded />} title={'Guarantee'} sub={'Quality Checked'} />
+                    <ProductExtraInfoItem icon={<RiTruckFill />} title={'Free Shipping'} sub={'Free On All Products'} />
+                    <ProductExtraInfoItem icon={<AiFillGift />} title={'Special Gift Cards'} sub={'Special Gift Cards'} />
+                    <ProductExtraInfoItem icon={<MdReply />} title={'Free Return'} sub={'Within 7 Days'} />
+                    <ProductExtraInfoItem icon={<FaTty />} title={'Consultancy'} sub={'Lifetime 24/7/356'} />
+                </div>
+            </div>
+            <div className='w-main m-auto mt-8'>
+                <ProductInfomatin description={product?.description} />
+            </div>
+            <div className='w-main mx-auto my-8'>
+                <h3 className='text-[20px] font-semibold py-[15px] pb-2 border-b-2 border-main'>
+                    OTHER CUSTOMERS ALSO BUY:
+                </h3>
+                <div className='mt-4 mx-[-10px] '>
+                    <CustomSlider products={relatedProducts} normal />
+                </div>
             </div>
         </div>
     );

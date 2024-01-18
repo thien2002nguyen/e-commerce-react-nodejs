@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import path from '../ultils/path'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,14 +15,14 @@ const TopHeader = () => {
         if (isLoggedIn) {
             dispatch(getCurrent())
         }
-    }, [dispatch, isLoggedIn, current])
+    }, [dispatch, isLoggedIn])
     return (
         <div className='h-[38px] w-full bg-main flex justify-center items-center'>
             <div className='w-main flex justify-between items-center text-xs text-white'>
                 <span>ORDER ONLINE OR CALL US (+1800) 000 8808</span>
                 {isLoggedIn
                     ? <div className='flex gap-4 text-sm items-center'>
-                        {current && <span>{`Welcome, ${current.lastname} ${current.firstname}`}</span>}
+                        <span>{`Welcome, ${current?.lastname} ${current?.firstname}`}</span>
                         <span
                             className='hover:rounded-sm p-1 hover:bg-gray-100 cursor-pointer 
                             hover:text-main'
@@ -35,7 +35,7 @@ const TopHeader = () => {
                         Sign In or Create Account
                     </Link>}
             </div>
-        </div>
+        </div >
     );
 };
 

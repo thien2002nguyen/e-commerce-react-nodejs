@@ -58,19 +58,32 @@ module.exports = {
             transform: 'translateX(0);'
           }
         },
+        'fade-in': {
+          '0%': {
+            opacity: '0;'
+          },
+          '100%': {
+            opacity: '1;'
+          }
+        }
       },
       animation: {
         'slide-top': 'slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
         'slide-top-sm': 'slide-top-sm 0.2s linear both;',
         'slide-right': 'slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
+        'fade-in': 'fade-in 0.5s linear both;'
       },
       listStyleType: {
         square: 'square',
         roman: 'upper-roman',
-      }
+      },
+      boxShadow: {
+        'full-box-1': '-1px -1px 1px rgba(0, 0, 0, 0.5), 1px 1px 1px rgba(0, 0, 0, 0.5);'
+      },
     },
   },
   plugins: [
-    "@tailwindcss/line-clamp"
+    require("@tailwindcss/line-clamp"),
+    require("@tailwindcss/forms")
   ],
 }

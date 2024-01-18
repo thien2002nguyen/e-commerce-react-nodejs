@@ -30,7 +30,7 @@ const Home = () => {
                     NEW ARRIVALS
                 </h3>
                 <div className='mt-4 mx-[-10px] '>
-                    <CustomSlider products={newProducts} activedTab={'new'} />
+                    <CustomSlider products={newProducts} activedTab={'new'} px />
                 </div>
             </div>
             <div className='my-8 w-full'>

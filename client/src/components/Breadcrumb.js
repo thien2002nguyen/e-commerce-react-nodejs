@@ -12,14 +12,14 @@ const Breadcrumb = ({ title, category }) => {
     ];
     const breadcrumb = useBreadcrumb(routes)
     return (
-        <div className='text-sm flex items-center gap-1'>
+        <div className='text-sm flex items-center gap-[2px]'>
             {breadcrumb?.filter(element => !element.match.route === false).map(({ match, breadcrumb }, index, self) => (
                 <Link
-                    className='flex items-center gap-1 capitalize hover:text-main duration-150'
+                    className='flex items-center gap-[2px] capitalize hover:text-main duration-150'
                     key={index}
                     to={match.pathname}>
                     <span>{breadcrumb}</span>
-                    {index !== self.length - 1 && <IoIosArrowForward />}
+                    {index !== self.length - 1 && <IoIosArrowForward size={8} />}
                 </Link>
             ))}
         </div>

@@ -12,10 +12,10 @@ const {
     IoMdHeart,
 } = icons
 
-const Product = ({ productData, isNew }) => {
+const Product = ({ productData, isNew, normal, px }) => {
     const [isShowOption, setIsShowOption] = useState()
     return (
-        <div className='w-full text-base px-[10px]'>
+        <div className={`w-full text-base ${px && 'px-[10px]'}`}>
             <Link
                 className='w-full border p-[15px] flex flex-col items-center'
                 to={`/${productData?.category?.toLowerCase()}/${productData._id}/${productData.title}`}
@@ -43,9 +43,11 @@ const Product = ({ productData, isNew }) => {
                             className='w-[274px] h-[274px] object-cover'
                         />
                     </div>
-                    <img src={isNew ? tagRed : tagBlue} alt="" className={`absolute 
+                    {!normal && <>
+                        <img src={isNew ? tagRed : tagBlue} alt="" className={`absolute 
                         top-0 right-0 h-[25px] object-cover ${isNew ? 'w-[75px]' : 'w-[100px]'}`} />
-                    <span className='absolute top-0 right-4 text-[14px] text-white'>{isNew ? 'New' : 'Trending'}</span>
+                        <span className='absolute top-0 right-4 text-[14px] text-white'>{isNew ? 'New' : 'Trending'}</span>
+                    </>}
                 </div>
                 <div className='flex flex-col gap-1 mt-[15px] items-start w-full'>
                     <span className='flex h-4'>{renderStartFromNumber(productData?.totalRatings)}</span>

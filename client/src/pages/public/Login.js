@@ -62,7 +62,7 @@ const Login = () => {
                     setIsLoad(false)
                     setIsRegister(false)
                     resetPayload()
-                    dispath(login({ isLoggedIn: true, token: response.accessToken, userData: response.userData }))
+                    dispath(login({ isLoggedIn: true, token: response.accessToken }))
                     navigate(`/${path.HOME}`)
                 }
                 else {
