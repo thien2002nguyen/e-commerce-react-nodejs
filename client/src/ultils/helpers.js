@@ -7,11 +7,12 @@ export const renderStartFromNumber = (number, size) => {
     if (!Number(number)) {
         return
     }
+    const numberStar = Math.floor(number)
     const star = []
-    for (let i = 0; i < +number; ++i) {
+    for (let i = 0; i < +numberStar; ++i) {
         star.push(<AiFillStar key={i} color='orange' size={size || 16} />)
     }
-    for (let i = 5; i > +number; --i) {
+    for (let i = 5; i > +numberStar; --i) {
         star.push(<AiOutlineStar key={i} color='orange' size={size || 16} />)
     }
     return star

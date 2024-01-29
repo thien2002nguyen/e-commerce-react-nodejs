@@ -26,11 +26,14 @@ const DetailProduct = () => {
     const { pid, title, category } = useParams()
     const [product, setProduct] = useState(null)
     const [quantity, setQuantity] = useState(1)
+    const [currentImage, setCurrentImage] = useState(null)
     const [relatedProducts, setRelatedProduct] = useState(null)
+    const [update, setUpdate] = useState(false)
     const fetchProductData = async (pid) => {
         const response = await apiGetProduct(pid)
         if (response.success) {
             setProduct(response.productData)
+            setCurrentImage(response.productData?.thumb)
         }
     }
     const fetchProducts = async (category) => {
@@ -40,11 +43,11 @@ const DetailProduct = () => {
         }
     }
     useEffect(() => {
-
         if (pid) {
             fetchProductData(pid)
             fetchProducts(category)
         }
+        window.scrollTo(0, 0)
     }, [pid, category])
     const handleQuantity = useCallback((number) => {
         if (!Number(number) || Number(number) < 1) {
@@ -59,17 +62,26 @@ const DetailProduct = () => {
     }, [])
     const handleChangeQuantity = useCallback((flag) => {
         if (quantity === 1 && flag === 'minus') {
-            return
+            setQuantity(1)
         }
         else {
             if (flag === 'minus') {
-                setQuantity(prev => +prev - 1)
+                setQuantity(prev => Number(prev) - 1)
             }
             else {
-                setQuantity(prev => +prev + 1)
+                setQuantity(prev => Number(prev) + 1)
             }
         }
     }, [quantity])
+    useEffect(() => {
+        if (pid) {
+            fetchProductData(pid)
+            setUpdate(false)
+        }
+    }, [update, pid])
+    const rerender = useCallback(() => {
+        setUpdate(true)
+    }, [])
     return (
         <div className='w-full'>
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
@@ -80,15 +92,16 @@ const DetailProduct = () => {
             </div>
             <div className='w-main m-auto mt-5 grid grid-cols-5 gap-4 mb-5'>
                 <div className='col-span-2 flex flex-col'>
-                    <img src={product?.thumb} alt="product" className='border w-[458px] h-[458px] object-contain' />
+                    <img src={currentImage} alt="product" className='border w-[458px] h-[458px] object-contain' />
                     <div className='w-[466px] mt-4'>
                         <Slider className='detail-slick' {...settings}>
                             {product?.images?.map((element, index) => (
                                 <div key={index} className='w-full pe-2'>
                                     <img
+                                        onClick={() => setCurrentImage(element)}
                                         src={element}
                                         alt="sub-product"
-                                        className='border w-full h-[143px] object-contain'
+                                        className='border w-full h-[143px] object-contain cursor-pointer'
                                     />
                                 </div>
                             ))}
@@ -127,7 +140,7 @@ const DetailProduct = () => {
                 </div>
             </div>
             <div className='w-main m-auto mt-8'>
-                <ProductInfomatin description={product?.description} />
+                <ProductInfomatin product={product} rerender={rerender} />
             </div>
             <div className='w-main mx-auto my-8'>
                 <h3 className='text-[20px] font-semibold py-[15px] pb-2 border-b-2 border-main'>

@@ -33,7 +33,7 @@ export const userSlice = createSlice({
 
         builder.addCase(actions.getCurrent.rejected, (state, action) => {
             state.isLoading = false;
-            state.errorMessage = action.payload.message;
+            state.errorMessage = action.payload ? action.payload.message : 'An error occurred';
         });
     },
 })

@@ -79,9 +79,11 @@ const DealDaily = () => {
                     alt=""
                     className='w-full object-contain'
                 />
-                <span className='line-clamp-1 capitalize'>{dealDaily?.title?.toLowerCase()}</span>
+                <span className='line-clamp-1 capitalize'>
+                    {dealDaily?.title?.toLowerCase() || 'product coming soon'}
+                </span>
                 <span className='flex h-4'>{renderStartFromNumber(dealDaily?.totalRatings, 20)}</span>
-                <span>{`${formatMoney(dealDaily?.price)} VNĐ`}</span>
+                <span className='h-4'>{dealDaily?.price && `${formatMoney(dealDaily?.price)} VNĐ`}</span>
             </div>
             <div className='px-4 mt-8'>
                 <div className='flex justify-center gap-2 items-center mb-4'>

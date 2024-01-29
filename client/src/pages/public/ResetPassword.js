@@ -29,7 +29,7 @@ const ResetPassword = () => {
     }
     return (
         <div>
-            <div className='absolute top-0 left-0 bottom-0 right-0 bg-white
+            <div className='absolute inset-0 bg-white
                 z-10 flex justify-center py-8'
             >
                 <div className='flex flex-col gap-4'>

@@ -91,11 +91,11 @@ const SearchItem = ({ name, activedClick, changeActiveFitler, type = 'checkbox' 
                 onClick={e => e.stopPropagation()}
             >
                 {type === 'checkbox' &&
-                    <div>
+                    <div className='cursor-default'>
                         <div className='flex items-center justify-between px-5 py-6 gap-8 border-b'>
                             <span className='whitespace-nowrap'>{`${selected.length} selected`}</span>
                             <span
-                                className='underline text-gray-800 hover:text-gray-600 duration-150'
+                                className='underline text-gray-800 hover:text-gray-600 duration-150 cursor-pointer'
                                 onClick={() => {
                                     setSelected([])
                                     changeActiveFitler(null)
@@ -113,6 +113,7 @@ const SearchItem = ({ name, activedClick, changeActiveFitler, type = 'checkbox' 
                                         id={element}
                                         onChange={handleSelected}
                                         value={element}
+                                        className='cursor-pointer'
                                         checked={selected?.some(item => item === element) || false}
                                     />
                                     <label htmlFor={element} className='capitalize text-gray-700'>
@@ -123,51 +124,52 @@ const SearchItem = ({ name, activedClick, changeActiveFitler, type = 'checkbox' 
                         </div>
                     </div>
                 }
-                {type === "input" && <div>
-                    <div className='flex items-center justify-between px-5 py-6 gap-8 border-b'>
-                        <span className='whitespace-nowrap flex flex-col'>
-                            <span>The highest price is {formatMoney(bestPrice?.price)} VND</span>
-                            <span>Default input value is USD</span>
-                        </span>
-                        <span
-                            className='underline text-gray-800 hover:text-gray-600 duration-150'
-                            onClick={() => {
-                                setPrice({ from: '', to: '' })
-                                changeActiveFitler(null)
-                            }}
-                        >
-                            Reset
-                        </span>
-                    </div>
-                    <div className='flex flex-col gap-2 p-2'>
-                        <div className='flex items-center gap-2'>
-                            <div className='flex items-center gap-2'>
-                                <label htmlFor="from">From</label>
-                                <input
-                                    id='from'
-                                    type='number'
-                                    className='border p-2'
-                                    value={price.from}
-                                    onChange={e => setPrice(prev => ({ ...prev, from: e.target.value }))}
-                                />
-                            </div>
-                            <div className='flex items-center gap-2'>
-                                <label htmlFor="to">To</label>
-                                <input
-                                    id='to'
-                                    type='number'
-                                    className='border p-2'
-                                    value={price.to}
-                                    onChange={e => setPrice(prev => ({ ...prev, to: e.target.value }))}
-                                />
-                            </div>
+                {type === "input" &&
+                    <div className='cursor-default'>
+                        <div className='flex items-center justify-between px-5 py-6 gap-8 border-b'>
+                            <span className='whitespace-nowrap flex flex-col'>
+                                <span>The highest price is {formatMoney(bestPrice?.price)} VND</span>
+                                <span>Default input value is USD</span>
+                            </span>
+                            <span
+                                className='underline text-gray-800 hover:text-gray-600 duration-150 cursor-pointer'
+                                onClick={() => {
+                                    setPrice({ from: '', to: '' })
+                                    changeActiveFitler(null)
+                                }}
+                            >
+                                Reset
+                            </span>
                         </div>
-                        {isPriceFromGreater && <span
-                            className='text-xs text-main text-end'>
-                            From price can not greater than to price
-                        </span>}
-                    </div>
-                </div>}
+                        <div className='flex flex-col gap-2 p-2'>
+                            <div className='flex items-center gap-2'>
+                                <div className='flex items-center gap-2'>
+                                    <label htmlFor="from">From</label>
+                                    <input
+                                        id='from'
+                                        type='number'
+                                        className='border p-2'
+                                        value={price.from}
+                                        onChange={e => setPrice(prev => ({ ...prev, from: e.target.value }))}
+                                    />
+                                </div>
+                                <div className='flex items-center gap-2'>
+                                    <label htmlFor="to">To</label>
+                                    <input
+                                        id='to'
+                                        type='number'
+                                        className='border p-2'
+                                        value={price.to}
+                                        onChange={e => setPrice(prev => ({ ...prev, to: e.target.value }))}
+                                    />
+                                </div>
+                            </div>
+                            {isPriceFromGreater && <span
+                                className='text-xs text-main text-end'>
+                                From price can not greater than to price
+                            </span>}
+                        </div>
+                    </div>}
             </div>}
         </div>
     );

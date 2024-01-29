@@ -72,7 +72,9 @@ const Products = () => {
         <div className='w-full'>
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
                 <div className='w-main'>
-                    <h3 className='font-semibold uppercase text-[18px] mb-2'>{category}</h3>
+                    <h3 className='font-semibold uppercase text-[18px] mb-2'>
+                        {category === ':category' ? 'products' : category}
+                    </h3>
                     <Breadcrumb category={category} />
                 </div>
             </div>
@@ -96,9 +98,9 @@ const Products = () => {
                         />
                     </div>
                 </div>
-                <div className='flex flex-col w-1/6'>
+                <div className='flex flex-col w-2/7'>
                     <span className='font-semibold text-sm text-gray-800'>Sort by</span>
-                    <div className='w-full mt-2 '>
+                    <div className='w-full mt-2'>
                         <InputSelect value={sort} options={sorts} changeValue={changeValue} />
                     </div>
                 </div>

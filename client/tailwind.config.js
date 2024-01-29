@@ -26,6 +26,10 @@ module.exports = {
         '6': '6 6 0%',
         '7': '7 7 0%',
         '8': '8 8 0%',
+        '9': '9 9 0%',
+        '10': '10 10 0%',
+        '11': '11 11 0%',
+        '12': '12 12 0%',
       },
       keyframes: {
         'slide-top': {
@@ -83,7 +87,6 @@ module.exports = {
     },
   },
   plugins: [
-    require("@tailwindcss/line-clamp"),
-    require("@tailwindcss/forms")
+    "@tailwindcss/line-clamp",
   ],
 }

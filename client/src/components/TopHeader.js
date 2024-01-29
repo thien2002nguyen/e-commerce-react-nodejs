@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import path from '../ultils/path'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,10 +12,15 @@ const TopHeader = () => {
     const dispatch = useDispatch()
     const { isLoggedIn, current } = useSelector(state => state.user)
     useEffect(() => {
-        if (isLoggedIn) {
-            dispatch(getCurrent())
+        const setTimeoutId = setTimeout(() => {
+            if (isLoggedIn) {
+                dispatch(getCurrent())
+            }
+        }, 300)
+        return () => {
+            clearTimeout(setTimeoutId)
         }
-    }, [dispatch, isLoggedIn])
+    }, [isLoggedIn, dispatch])
     return (
         <div className='h-[38px] w-full bg-main flex justify-center items-center'>
             <div className='w-main flex justify-between items-center text-xs text-white'>
@@ -35,7 +40,7 @@ const TopHeader = () => {
                         Sign In or Create Account
                     </Link>}
             </div>
-        </div >
+        </div>
     );
 };
 
