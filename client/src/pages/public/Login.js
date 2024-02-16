@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { InputField, Button } from '../../components';
-import { apiLogin, apiRegister, apiForgotPassword } from '../../apis';
+import { InputField, Button } from 'components';
+import { apiLogin, apiRegister, apiForgotPassword } from 'apis';
 import Swal from 'sweetalert2'
 import { Link, useNavigate } from 'react-router-dom';
-import path from '../../ultils/path';
-import { login } from '../../store/user/userSlice'
+import path from 'ultils/path';
+import { login } from 'store/user/userSlice'
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify'
-import { validate } from '../../ultils/helpers';
-import icons from '../../ultils/icons';
+import { validate } from 'ultils/helpers';
+import icons from 'ultils/icons';
 
 const { IoIosArrowRoundBack, BiLoader } = icons
 
@@ -52,7 +52,7 @@ const Login = () => {
                 }
                 else {
                     setIsLoad(false)
-                    Swal.fire('Opps!', response.mes, 'error')
+                    Swal.fire('Oops!', response.mes, 'error')
                 }
             }
             else {
@@ -67,7 +67,7 @@ const Login = () => {
                 }
                 else {
                     setIsLoad(false)
-                    Swal.fire('Opps!', response.mes, 'error')
+                    Swal.fire('Oops!', response?.data?.mes, 'error')
                 }
             }
         }

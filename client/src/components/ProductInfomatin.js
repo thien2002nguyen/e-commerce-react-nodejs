@@ -36,7 +36,7 @@ const ProductInfomatin = ({ product, rerender }) => {
     const handleVoteNow = () => {
         if (!isLoggedIn) {
             Swal.fire({
-                title: 'Opps!',
+                title: 'Oops!',
                 text: 'Go login to vote',
                 cancelButtonText: 'Cancel',
                 confirmButtonText: 'Go login',

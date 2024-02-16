@@ -4,7 +4,7 @@ import { BsHandbagFill, BsShieldShaded } from 'react-icons/bs'
 import { FaUserCircle, FaTty } from 'react-icons/fa'
 import { AiFillHome, AiFillStar, AiOutlineStar, AiFillEye, AiFillGift } from 'react-icons/ai'
 import { IoMdHeart, IoIosArrowForward, IoIosArrowRoundBack, IoIosArrowDown } from "react-icons/io";
-import { BiLoader } from "react-icons/bi"
+import { BiLoader, BiDotsHorizontalRounded } from "react-icons/bi"
 
 const icons = {
     RiPhoneFill,
@@ -27,6 +27,7 @@ const icons = {
     MdReply,
     FaTty,
     IoIosArrowDown,
+    BiDotsHorizontalRounded,
 }
 
 export default icons

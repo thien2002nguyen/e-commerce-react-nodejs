@@ -18,6 +18,9 @@ export const userSlice = createSlice({
         logout: (state) => {
             state.isLoggedIn = false
             state.token = null
+        },
+        clearErrorMessage: (state) => {
+            state.errorMessage = ''
         }
     },
     // Code logic xử lý async action
@@ -29,15 +32,19 @@ export const userSlice = createSlice({
         builder.addCase(actions.getCurrent.fulfilled, (state, action) => {
             state.isLoading = false;
             state.current = action.payload;
+            state.isLoggedIn = true
         });
 
         builder.addCase(actions.getCurrent.rejected, (state, action) => {
             state.isLoading = false;
-            state.errorMessage = action.payload ? action.payload.message : 'An error occurred';
+            state.current = null
+            state.isLoggedIn = false
+            state.token = null
+            state.errorMessage = 'Login session has expired'
         });
     },
 })
 
-export const { login, logout } = userSlice.actions
+export const { login, logout, clearErrorMessage } = userSlice.actions
 
 export default userSlice.reducer

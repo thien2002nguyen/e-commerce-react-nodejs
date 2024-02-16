@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useSearchParams, useNavigate, createSearchParams } from 'react-router-dom';
-import { Breadcrumb, InputSelect, Product, SearchItem } from '../../components';
+import { Breadcrumb, InputSelect, Pagination, Product, SearchItem } from '../../components';
 import { apiGetProducts } from '../../apis';
 import { sorts } from '../../ultils/contants';
 
@@ -10,11 +10,13 @@ const Products = () => {
     const [products, setProducts] = useState(null)
     const [activedClick, setActivedClick] = useState(null)
     const [sort, setSort] = useState('')
+    const [totalProducts, setTotalProducts] = useState(null)
     const [params] = useSearchParams()
     const fetchProductsByCategory = async (queries) => {
         const response = await apiGetProducts(queries)
         if (response.success) {
             setProducts(response.products)
+            setTotalProducts(response.counts)
         }
     }
     useEffect(() => {
@@ -58,16 +60,26 @@ const Products = () => {
         setSort(value)
     }, [])
     useEffect(() => {
-        if (sort !== '') {
-            navigate({
-                pathname: `/${category}`,
-                search: createSearchParams({ sort }).toString()
-            })
+        let param = []
+        for (let item of params.entries()) {
+            param.push(item)
+        }
+        const queries = {}
+        for (let item of params) {
+            queries[item[0]] = item[1]
+        }
+        if (sort) {
+            queries.sort = sort
+            queries.page = 1
         }
         else {
-            navigate(`/${category}`)
+            delete queries.sort
         }
-    }, [sort, navigate, category])
+        navigate({
+            pathname: `/${category}`,
+            search: createSearchParams(queries).toString()
+        })
+    }, [sort, navigate, category, params])
     return (
         <div className='w-full'>
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
@@ -109,6 +121,9 @@ const Products = () => {
                 {products?.map((element, index) => (
                     <Product key={index} productData={element} normal />
                 ))}
+            </div>
+            <div className='w-main mx-auto my-4 flex justify-center'>
+                <Pagination totalCount={totalProducts} />
             </div>
         </div>
     );

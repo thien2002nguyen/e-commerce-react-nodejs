@@ -8,7 +8,7 @@ const FinalRegister = () => {
     const navigate = useNavigate()
     useEffect(() => {
         if (status === 'failed') {
-            Swal.fire('Opps!', 'Account registration failed', 'error').then(() => {
+            Swal.fire('Oops!', 'Account registration failed', 'error').then(() => {
                 navigate(`/${path.LOGIN}`)
             })
         }

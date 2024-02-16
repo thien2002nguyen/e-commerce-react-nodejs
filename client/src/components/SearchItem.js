@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import icons from '../ultils/icons';
 import { colors } from '../ultils/contants';
-import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
+import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { apiGetProducts } from '../apis'
 import { formatMoney } from '../ultils/helpers'
 import useDebounce from '../hooks/useDebounce'
@@ -15,11 +15,11 @@ const SearchItem = ({ name, activedClick, changeActiveFitler, type = 'checkbox' 
         from: '',
         to: ''
     })
+    const [params] = useSearchParams()
     const [isPriceFromGreater, setIsPriceFromGreater] = useState(false)
     const { category } = useParams()
     const navigate = useNavigate()
     const handleSelected = (e) => {
-        console.log(e?.target.value);
         const alreadyElement = selected.find(element => element === e.target.value)
         if (alreadyElement) {
             setSelected(prev => prev.filter(element => element !== e.target.value))
@@ -29,13 +29,26 @@ const SearchItem = ({ name, activedClick, changeActiveFitler, type = 'checkbox' 
         }
     }
     useEffect(() => {
+        let param = []
+        for (let item of params.entries()) {
+            param.push(item)
+        }
+        const queries = {}
+        for (let item of params) {
+            queries[item[0]] = item[1]
+        }
+        if (selected.length > 0) {
+            queries.color = selected.join(',')
+            queries.page = 1
+        }
+        else {
+            delete queries.color
+        }
         navigate({
             pathname: `/${category}`,
-            search: createSearchParams({
-                color: selected.length > 1 ? selected.join(',') : selected
-            }).toString()
+            search: createSearchParams(queries).toString()
         })
-    }, [selected, category, navigate])
+    }, [selected, category, navigate, params])
     const fetchBestPriceProduct = async () => {
         const response = await apiGetProducts({ sort: '-price', limit: 1 })
         if (response.success) {
@@ -60,23 +73,32 @@ const SearchItem = ({ name, activedClick, changeActiveFitler, type = 'checkbox' 
         }
     }, [deboucePriceFrom, deboucePriceTo])
     useEffect(() => {
-        const data = {}
+        let param = []
+        for (let item of params.entries()) {
+            param.push(item)
+        }
+        const queries = {}
+        for (let item of params) {
+            queries[item[0]] = item[1]
+        }
         if (Number(deboucePriceFrom) > 0) {
-            data.from = deboucePriceFrom
-        }
-        if (Number(deboucePriceTo) > 0) {
-            data.to = deboucePriceTo
-        }
-        if (deboucePriceFrom || deboucePriceTo) {
-            navigate({
-                pathname: `/${category}`,
-                search: createSearchParams(data).toString()
-            })
+            queries.from = deboucePriceFrom
         }
         else {
-            navigate(`/${category}`)
+            delete queries.from
         }
-    }, [deboucePriceFrom, deboucePriceTo, category, navigate])
+        if (Number(deboucePriceTo) > 0) {
+            queries.to = deboucePriceTo
+        }
+        else {
+            delete queries.to
+        }
+        queries.page = 1
+        navigate({
+            pathname: `/${category}`,
+            search: createSearchParams(queries).toString()
+        })
+    }, [deboucePriceFrom, deboucePriceTo, category, navigate, params])
     return (
         <div
             className={`px-6 py-3 text-sm border border-gray-800 text-gray-600 
@@ -115,6 +137,7 @@ const SearchItem = ({ name, activedClick, changeActiveFitler, type = 'checkbox' 
                                         value={element}
                                         className='cursor-pointer'
                                         checked={selected?.some(item => item === element) || false}
+                                        onClick={() => changeActiveFitler(null)}
                                     />
                                     <label htmlFor={element} className='capitalize text-gray-700'>
                                         {element}
