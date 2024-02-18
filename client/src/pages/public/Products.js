@@ -85,7 +85,7 @@ const Products = () => {
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
                 <div className='w-main'>
                     <h3 className='font-semibold uppercase text-[18px] mb-2'>
-                        {category === ':category' ? 'products' : category}
+                        {category}
                     </h3>
                     <Breadcrumb category={category} />
                 </div>

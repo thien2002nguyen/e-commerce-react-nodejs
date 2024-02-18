@@ -96,7 +96,7 @@ const DetailProduct = () => {
                     <div className='w-[466px] mt-4'>
                         <Slider className='detail-slick' {...settings}>
                             {product?.images?.map((element, index) => (
-                                <div key={index} className='w-full pe-2'>
+                                <div key={index} className='w-full pr-2'>
                                     <img
                                         onClick={() => setCurrentImage(element)}
                                         src={element}
@@ -117,7 +117,7 @@ const DetailProduct = () => {
                         {renderStartFromNumber(product?.totalRatings, 18)}
                         <span className='text-sm text-main ms-2 italic'>{`Đã bán: ${product?.sold}`}</span>
                     </div>
-                    <ul className='text-sm text-gray-500 leading-6 list-square ps-4'>
+                    <ul className='text-sm text-gray-500 leading-6 list-square pl-4'>
                         {product?.description?.map((element, index) => (
                             <li key={index}>{element}</li>
                         ))}

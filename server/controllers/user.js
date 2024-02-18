@@ -117,7 +117,7 @@ const login = asyncHandler(async (req, res) => {
 const getCurrent = asyncHandler(async (req, res) => {
     const { _id } = req.user
     // select | tên các trường cần lấy | thêm (-) trước các trường không cần lấy
-    const user = await User.findById(_id).select('-refreshToken -password -role')
+    const user = await User.findById(_id).select('-refreshToken -password')
     return res.status(200).json({
         success: user ? true : false,
         rs: user ? user : 'User not found'

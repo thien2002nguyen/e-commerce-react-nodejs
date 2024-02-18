@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { InputField, Button } from 'components';
+import { InputField, Button, Loading } from 'components';
 import { apiLogin, apiRegister, apiForgotPassword } from 'apis';
 import Swal from 'sweetalert2'
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,13 +9,13 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify'
 import { validate } from 'ultils/helpers';
 import icons from 'ultils/icons';
+import { showModal } from 'store/app/appSlice';
 
-const { IoIosArrowRoundBack, BiLoader } = icons
+const { IoIosArrowRoundBack } = icons
 
 const Login = () => {
     const navigate = useNavigate()
     const dispath = useDispatch()
-    const [isLoad, setIsLoad] = useState(false)
     const [payload, setPayload] = useState({
         firstname: '',
         lastname: '',
@@ -41,46 +41,41 @@ const Login = () => {
         const invalids = isRegister ? validate(payload, setInvalidFields) : validate(data, setInvalidFields)
         if (invalids === 0) {
             if (isRegister) {
-                setIsLoad(true)
+                dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
                 const response = await apiRegister(payload)
+                dispath(showModal({ isShowModal: false, modalChildren: null }))
                 if (response.success) {
-                    setIsLoad(false)
                     Swal.fire('Congratulation!', response.mes, 'success').then(() => {
                         setIsRegister(false)
                         resetPayload()
                     })
                 }
                 else {
-                    setIsLoad(false)
                     Swal.fire('Oops!', response.mes, 'error')
                 }
             }
             else {
-                setIsLoad(true)
+                dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
                 const response = await apiLogin(data)
+                dispath(showModal({ isShowModal: false, modalChildren: null }))
                 if (response.success) {
-                    setIsLoad(false)
                     setIsRegister(false)
                     resetPayload()
                     dispath(login({ isLoggedIn: true, token: response.accessToken }))
                     navigate(`/${path.HOME}`)
                 }
                 else {
-                    setIsLoad(false)
                     Swal.fire('Oops!', response?.data?.mes, 'error')
                 }
             }
         }
     }, [payload, isRegister, navigate, dispath])
     const handleForgotPassword = async () => {
-        setIsLoad(true)
         const response = await apiForgotPassword({ email })
         if (response.success) {
-            setIsLoad(false)
             toast.success(response.mes)
         }
         else {
-            setIsLoad(false)
             toast.info(response.mes)
         }
     }
@@ -110,9 +105,6 @@ const Login = () => {
                                 duration-200 mx-2 flex justify-center items-center gap-2'
                         >
                             <span>Submit</span>
-                            {isLoad && <div className='animate-spin'>
-                                <BiLoader />
-                            </div>}
                         </Button>
                         <Button
                             handleOnClick={() => setIsForgotPassword(false)}
@@ -180,9 +172,6 @@ const Login = () => {
                     >
                         <div className='flex justify-center items-center gap-2'>
                             <span>{isRegister ? 'Register' : 'Login'}</span>
-                            {isLoad && <div className='animate-spin'>
-                                <BiLoader />
-                            </div>}
                         </div>
                     </Button>
                     <div className='flex items-center justify-between my-2 w-full text-sm'>

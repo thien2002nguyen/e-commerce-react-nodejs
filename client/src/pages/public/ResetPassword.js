@@ -5,25 +5,17 @@ import { apiResetPassword } from '../../apis';
 import { toast } from 'react-toastify';
 import path from '../../ultils/path';
 
-import icons from '../../ultils/icons';
-
-const { BiLoader } = icons
-
 const ResetPassword = () => {
     const [password, setPassword] = useState('')
     const { token } = useParams()
     const navigate = useNavigate()
-    const [isLoad, setIsLoad] = useState(false)
     const handleResetPassword = async () => {
-        setIsLoad(true)
         const response = await apiResetPassword({ password, token })
         if (response.success) {
-            setIsLoad(false)
             toast.success(response.mes)
             navigate(`/${path.LOGIN}`)
         }
         else {
-            setIsLoad(false)
             toast.info(response.mes)
         }
     }
@@ -49,9 +41,6 @@ const ResetPassword = () => {
                                 duration-200 mx-2'
                         >
                             <span>Submit</span>
-                            {isLoad && <div className='animate-spin'>
-                                <BiLoader />
-                            </div>}
                         </Button>
                     </div>
                 </div>

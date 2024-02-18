@@ -16,8 +16,10 @@ export const userSlice = createSlice({
             state.token = action.payload.token
         },
         logout: (state) => {
+            state.current = null
             state.isLoggedIn = false
             state.token = null
+            state.errorMessage = ''
         },
         clearErrorMessage: (state) => {
             state.errorMessage = ''
