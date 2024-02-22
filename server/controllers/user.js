@@ -225,19 +225,52 @@ const resetPassword = asyncHandler(async (req, res) => {
 })
 
 const getUsers = asyncHandler(async (req, res) => {
-    const response = await User.find().select('-refreshToken -password -role')
-    return res.status(200).json({
-        success: response ? true : false,
-        users: response
-    })
+    const queries = { ...req.query }
+    const excludeFields = ['limit', 'sort', 'page', 'fields']
+    excludeFields.forEach(element => delete queries[element])
+    let queryString = JSON.stringify(queries);
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchElement => `$${matchElement}`)
+    const formatedQueries = JSON.parse(queryString)
+    if (queries?.name) {
+        formatedQueries.name = { $regex: queries.name, $options: 'i' }
+    }
+    if (req.query.search) {
+        delete formatedQueries.search
+        formatedQueries['$or'] = [
+            { firstname: { $regex: req.query.search, $options: 'i' } },
+            { lastname: { $regex: req.query.search, $options: 'i' } },
+            { email: { $regex: req.query.search, $options: 'i' } }
+        ]
+    }
+    let queryCommand = User.find(formatedQueries)
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ')
+        queryCommand = queryCommand.sort(sortBy)
+    }
+    if (req.query.fields) {
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    }
+    const page = +req.query.page || 1
+    const limit = +req.query.limit || process.env.USERS
+    const skip = (page - 1) * limit
+    queryCommand.skip(skip).limit(limit)
+    try {
+        const response = await queryCommand.exec()
+        const counts = await User.find(formatedQueries).countDocuments()
+        return res.status(200).json({
+            success: response ? true : false,
+            counts,
+            users: response ? response : 'Can not get users',
+        });
+    } catch {
+        throw new Error('Something went wrong')
+    }
 })
 
 const deleteUser = asyncHandler(async (req, res) => {
-    const { _id } = req.query
-    if (!_id) {
-        throw new Error('Missing inputs')
-    }
-    const response = await User.findByIdAndDelete(_id)
+    const { uid } = req.params
+    const response = await User.findByIdAndDelete(uid)
     return res.status(200).json({
         success: response ? true : false,
         mes: response ? `User with email ${response.email} delete` : 'No user delete'
@@ -252,7 +285,7 @@ const updateUser = asyncHandler(async (req, res) => {
     const response = await User.findByIdAndUpdate(_id, req.body, { new: true }).select('-refreshToken -password -role')
     return res.status(200).json({
         success: response ? true : false,
-        mes: response ? response : 'Something went wrong'
+        mes: response ? 'Updated' : 'Something went wrong'
     })
 })
 
@@ -264,7 +297,7 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
     const response = await User.findByIdAndUpdate(uid, req.body, { new: true }).select('-refreshToken -password -role')
     return res.status(200).json({
         success: response ? true : false,
-        mes: response ? response : 'Something went wrong'
+        mes: response ? 'Updated' : 'Something went wrong'
     })
 })
 

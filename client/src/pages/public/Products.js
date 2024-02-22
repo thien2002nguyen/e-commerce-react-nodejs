@@ -13,22 +13,15 @@ const Products = () => {
     const [totalProducts, setTotalProducts] = useState(null)
     const [params] = useSearchParams()
     const fetchProductsByCategory = async (queries) => {
-        const response = await apiGetProducts(queries)
+        const response = await apiGetProducts({ ...queries, limit: process.env.REACT_APP_LIMIT })
         if (response.success) {
             setProducts(response.products)
             setTotalProducts(response.counts)
         }
     }
     useEffect(() => {
-        let param = []
-        for (let item of params.entries()) {
-            param.push(item)
-        }
-        const queries = {}
+        const queries = Object.fromEntries([...params])
         let priceQuery = {}
-        for (let item of params) {
-            queries[item[0]] = item[1]
-        }
         if (queries.from && queries.to) {
             priceQuery = {
                 $and: [
@@ -60,14 +53,7 @@ const Products = () => {
         setSort(value)
     }, [])
     useEffect(() => {
-        let param = []
-        for (let item of params.entries()) {
-            param.push(item)
-        }
-        const queries = {}
-        for (let item of params) {
-            queries[item[0]] = item[1]
-        }
+        const queries = Object.fromEntries([...params])
         if (sort) {
             queries.sort = sort
             queries.page = 1

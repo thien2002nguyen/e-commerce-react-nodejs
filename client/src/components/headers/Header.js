@@ -27,12 +27,12 @@ const Header = () => {
                     <span>Online Support 24/7</span>
                 </div>
                 {current && <Fragment>
-                    <div className='cursor-pointer flex items-center px-6 border-x justify-center gap-2'>
+                    <div className='cursor-pointer flex items-center px-6 border-l justify-center gap-2'>
                         <BsHandbagFill color='red' />
                         <span>0 item(s)</span>
                     </div>
                     <Link
-                        className='cursor-pointer flex items-center px-6 justify-center gap-2'
+                        className='cursor-pointer flex items-center border-l px-6 justify-center gap-2'
                         to={current?.role === 'admin' ? `/${path.ADMIN}/${path.DASHBOARD}` :
                             `/${path.MEMBER}/${path.PERSONAL}`}
                     >

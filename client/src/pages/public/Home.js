@@ -2,6 +2,7 @@ import React from 'react';
 import { Sidebar, Banner, BestSeller, DealDaily, FeatureProducts, CustomSlider } from '../../components';
 import { useSelector } from 'react-redux';
 import icons from '../../ultils/icons';
+import defaultProduct from 'assets/default-product-image.png'
 
 const { IoIosArrowForward } = icons
 
@@ -38,7 +39,7 @@ const Home = () => {
                 <div className='grid grid-cols-3 gap-4 mt-4'>
                     {categories?.filter(element => element.brand.length > 0)?.map((element, index) => (
                         <div key={index} className='border flex p-4 gap-4'>
-                            <img src={element.image} alt="" className='flex-1 object-contain 
+                            <img src={element.image || defaultProduct} alt="" className='flex-1 object-contain 
                                 w-[144px] h-[129px]' />
                             <div className='flex-1'>
                                 <h4 className='font-semibold uppercase text-gray-700'>{element.title}</h4>

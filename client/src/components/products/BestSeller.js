@@ -3,6 +3,8 @@ import { apiGetProducts } from 'apis/products';
 import { CustomSlider } from 'components'
 import { getNewProducts } from 'store/products/asyncActions';
 import { useDispatch, useSelector } from 'react-redux';
+import banner2 from 'assets/banner2-home2_2000x_crop_center.png'
+import banner1 from 'assets/banner1-home2_2000x_crop_center.png'
 
 const tabs = [
     { id: 'best', name: 'best sellers' },
@@ -53,12 +55,12 @@ const BestSeller = () => {
             </div>
             <div className='w-full flex gap-4 mt-4'>
                 <img
-                    src="https://digital-world-2.myshopify.com/cdn/shop/files/banner2-home2_2000x_crop_center.png?v=1613166657"
+                    src={banner2}
                     alt=""
                     className='flex-1 object-contain'
                 />
                 <img
-                    src="https://digital-world-2.myshopify.com/cdn/shop/files/banner1-home2_2000x_crop_center.png?v=1613166657"
+                    src={banner1}
                     alt=""
                     className='flex-1 object-contain'
                 />

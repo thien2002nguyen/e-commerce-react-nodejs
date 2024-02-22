@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import background from 'assets/ecommerce-login.png'
 import { InputField, Button, Loading } from 'components';
 import { apiLogin, apiRegister, apiForgotPassword } from 'apis';
 import Swal from 'sweetalert2'
@@ -112,7 +113,7 @@ const Login = () => {
                     </div>
                 </div>
             </div>}
-            <img src="https://www.hulkapps.com/cdn/shop/articles/1.Abadond_Banner_1621x.jpg?v=1644387196"
+            <img src={background}
                 alt=""
                 className='w-full h-full object-cover'
             />
@@ -131,6 +132,7 @@ const Login = () => {
                             invalidFields={invalidFields}
                             setInvalidFields={setInvalidFields}
                             handleSubmit={handleSubmit}
+                            fullWidth
                         />
                         <InputField
                             value={payload.lastname}
@@ -139,6 +141,7 @@ const Login = () => {
                             invalidFields={invalidFields}
                             setInvalidFields={setInvalidFields}
                             handleSubmit={handleSubmit}
+                            fullWidth
                         />
                     </div>}
                     <InputField
@@ -148,6 +151,7 @@ const Login = () => {
                         invalidFields={invalidFields}
                         setInvalidFields={setInvalidFields}
                         handleSubmit={handleSubmit}
+                        fullWidth
                     />
                     {isRegister && <InputField
                         value={payload.phone}
@@ -156,6 +160,7 @@ const Login = () => {
                         invalidFields={invalidFields}
                         setInvalidFields={setInvalidFields}
                         handleSubmit={handleSubmit}
+                        fullWidth
                     />}
                     <InputField
                         value={payload.password}
@@ -165,6 +170,7 @@ const Login = () => {
                         invalidFields={invalidFields}
                         setInvalidFields={setInvalidFields}
                         handleSubmit={handleSubmit}
+                        fullWidth
                     />
                     <Button
                         handleOnClick={handleSubmit}

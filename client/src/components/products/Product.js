@@ -5,6 +5,7 @@ import { renderStartFromNumber, formatMoney } from 'ultils/helpers';
 import { SelectOption } from 'components'
 import icons from 'ultils/icons';
 import { Link } from 'react-router-dom';
+import defaultProduct from 'assets/default-product-image.png'
 
 const {
     AiFillEye,
@@ -37,8 +38,7 @@ const Product = ({ productData, isNew, normal, px }) => {
                     </div>}
                     <div className='flex justify-center'>
                         <img
-                            src={productData?.thumb ||
-                                'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'}
+                            src={productData?.thumb || defaultProduct}
                             alt=""
                             className='w-[274px] h-[274px] object-cover'
                         />

@@ -1,24 +1,17 @@
 import React, { memo } from 'react';
-import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { createSearchParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 
 const PaginationItem = ({ children }) => {
     const navigate = useNavigate()
-    const { category } = useParams()
     const [params] = useSearchParams()
+    const location = useLocation()
     const handlePagination = () => {
-        let param = []
-        for (let item of params.entries()) {
-            param.push(item)
-        }
-        const queries = {}
-        for (let i of param) {
-            queries[i[0]] = i[1]
-        }
+        const queries = Object.fromEntries([...params])
         if (Number(children)) {
             queries.page = children
         }
         navigate({
-            pathname: `/${category}`,
+            pathname: location.pathname,
             search: createSearchParams(queries).toString()
         })
         window.scrollTo(0, 0)
