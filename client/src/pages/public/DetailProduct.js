@@ -5,6 +5,7 @@ import { Breadcrumb, Button, CustomSlider, ProductExtraInfoItem, ProductInfomati
 import Slider from "react-slick";
 import { formatMoney, renderStartFromNumber } from '../../ultils/helpers'
 import icons from '../../ultils/icons';
+import DOMPurify from 'dompurify';
 
 const {
     BsShieldShaded,
@@ -53,16 +54,19 @@ const DetailProduct = () => {
         if (!Number(number) || Number(number) < 1) {
             setQuantity(1)
         }
-        else if (Number(number) > 99) {
-            setQuantity(99)
+        else if (Number(number) > product?.quantity) {
+            setQuantity(product?.quantity)
         }
         else {
             setQuantity(number.trim())
         }
-    }, [])
+    }, [product])
     const handleChangeQuantity = useCallback((flag) => {
         if (quantity === 1 && flag === 'minus') {
             setQuantity(1)
+        }
+        else if (quantity === product?.quantity && flag === 'plus') {
+            setQuantity(product?.quantity)
         }
         else {
             if (flag === 'minus') {
@@ -72,7 +76,7 @@ const DetailProduct = () => {
                 setQuantity(prev => Number(prev) + 1)
             }
         }
-    }, [quantity])
+    }, [quantity, product])
     useEffect(() => {
         if (pid) {
             fetchProductData(pid)
@@ -111,17 +115,22 @@ const DetailProduct = () => {
                 <div className='col-span-2 flex flex-col gap-5'>
                     <div className='flex items-center justify-between'>
                         <h2 className='text-[30px] font-semibold'>{`${formatMoney(product?.price)} VNĐ`}</h2>
-                        <span className='text-sm text-main'>{`Kho: ${product?.quantity}`}</span>
+                        <span className='text-sm text-main'>{`In stock: ${product?.quantity}`}</span>
                     </div>
                     <div className='flex justify-start items-center'>
                         {renderStartFromNumber(product?.totalRatings, 18)}
-                        <span className='text-sm text-main ms-2 italic'>{`Đã bán: ${product?.sold}`}</span>
+                        <span className='text-sm text-main ms-2 italic'>{`Sold: ${product?.sold} pieces`}</span>
                     </div>
-                    <ul className='text-sm text-gray-500 leading-6 list-square pl-4'>
+                    {product?.description?.length > 1 && <ul className='text-sm text-gray-500 leading-6 list-square pl-4'>
                         {product?.description?.map((element, index) => (
                             <li key={index}>{element}</li>
                         ))}
-                    </ul>
+                    </ul>}
+                    {product?.description?.length === 1 && <div
+                        className='text-sm text-gray-500 leading-6 px-2 line-clamp-[12]'
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product?.description[0]) }}
+                    >
+                    </div>}
                     <div className='flex flex-col gap-8'>
                         <SelectQuantity
                             quantity={quantity}
@@ -132,11 +141,11 @@ const DetailProduct = () => {
                     </div>
                 </div>
                 <div className='col-span-1 flex flex-col gap-3'>
-                    <ProductExtraInfoItem icon={<BsShieldShaded />} title={'Guarantee'} sub={'Quality Checked'} />
-                    <ProductExtraInfoItem icon={<RiTruckFill />} title={'Free Shipping'} sub={'Free On All Products'} />
-                    <ProductExtraInfoItem icon={<AiFillGift />} title={'Special Gift Cards'} sub={'Special Gift Cards'} />
-                    <ProductExtraInfoItem icon={<MdReply />} title={'Free Return'} sub={'Within 7 Days'} />
-                    <ProductExtraInfoItem icon={<FaTty />} title={'Consultancy'} sub={'Lifetime 24/7/356'} />
+                    <ProductExtraInfoItem icon={<BsShieldShaded />} title='Guarantee' sub='Quality Checked' />
+                    <ProductExtraInfoItem icon={<RiTruckFill />} title='Free Shipping' sub='Free On All Products' />
+                    <ProductExtraInfoItem icon={<AiFillGift />} title='Special Gift Cards' sub='Special Gift Cards' />
+                    <ProductExtraInfoItem icon={<MdReply />} title='Free Return' sub='Within 7 Days' />
+                    <ProductExtraInfoItem icon={<FaTty />} title='Consultancy' sub='Lifetime 24/7/356' />
                 </div>
             </div>
             <div className='w-main m-auto mt-8'>
@@ -146,7 +155,7 @@ const DetailProduct = () => {
                 <h3 className='text-[20px] font-semibold py-[15px] pb-2 border-b-2 border-main'>
                     OTHER CUSTOMERS ALSO BUY:
                 </h3>
-                <div className='mt-4 mx-[-10px] '>
+                <div className='mt-4 mx-[10px] '>
                     <CustomSlider products={relatedProducts} normal />
                 </div>
             </div>

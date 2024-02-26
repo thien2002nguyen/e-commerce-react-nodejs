@@ -75,7 +75,7 @@ module.exports = {
         'slide-top': 'slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
         'slide-top-sm': 'slide-top-sm 0.2s linear both;',
         'slide-right': 'slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
-        'fade-in': 'fade-in 0.5s linear both;'
+        'fade-in': 'fade-in 0.3s linear both;'
       },
       listStyleType: {
         square: 'square',

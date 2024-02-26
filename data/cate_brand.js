@@ -1,7 +1,7 @@
 const data = [
     {
         cate: 'Smartphone',
-        brand: ['Apple', 'Samsung', 'LG', 'Asus', 'Nokia', 'BlackBerry'],
+        brand: ['Apple', 'Samsung', 'LG', 'Asus', 'Nokia', 'BlackBerry', 'Xiaomi', 'Vivo'],
         image: 'https://digital-world-2.myshopify.com/cdn/shop/files/mobile-devices_300x.jpg?v=1613166682'
     },
     {

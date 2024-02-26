@@ -9,6 +9,8 @@ import Swal from 'sweetalert2'
 import path from 'ultils/path';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import DOMPurify from 'dompurify';
+
 
 const ProductInfomatin = ({ product, rerender }) => {
     const [activedTab, setActivedTab] = useState(1)
@@ -73,12 +75,16 @@ const ProductInfomatin = ({ product, rerender }) => {
             </div>
             <div className='w-full border min-h-28'>
                 <div className={isActived ? 'animate-fade-in' : ''}>
-                    {activedTab === 1 &&
+                    {activedTab === 1 && product?.description?.length > 1 &&
                         <ul className='text-sm text-gray-700 leading-6 list-square p-4 pl-8'>
                             {product?.description?.map((element, index) => (
                                 <li key={index}>{element}</li>
                             ))}
                         </ul>}
+                    {activedTab === 1 && product?.description?.length === 1 && <div
+                        className='text-sm text-gray-700 leading-6 p-4 pl-8'
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product?.description[0]) }}>
+                    </div>}
                     {activedTab !== 1 && activedTab !== 5 &&
                         productInfoTabs.some(element => element.id === activedTab) &&
                         <div className='p-4 text-gray-700'>
@@ -130,7 +136,9 @@ const ProductInfomatin = ({ product, rerender }) => {
                                         star={element.star}
                                         updatedAt={element.updatedAt}
                                         comment={element.comment}
-                                        name={`${element.postedBy?.lastname} ${element.postedBy?.firstname}`}
+                                        name={element.postedBy ?
+                                            `${element.postedBy?.lastname} ${element.postedBy?.firstname}`
+                                            : 'Anonymous'}
                                     />
                                 ))}
                             </div>

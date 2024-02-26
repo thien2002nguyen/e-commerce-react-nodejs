@@ -72,7 +72,9 @@ const Login = () => {
         }
     }, [payload, isRegister, navigate, dispath])
     const handleForgotPassword = async () => {
+        dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
         const response = await apiForgotPassword({ email })
+        dispath(showModal({ isShowModal: false, modalChildren: null }))
         if (response.success) {
             toast.success(response.mes)
         }
@@ -102,8 +104,9 @@ const Login = () => {
                     <div className='w-full flex justify-end items-center'>
                         <Button
                             handleOnClick={handleForgotPassword}
-                            customStyle='px-4 py-2 rounded-md text-white my-2 bg-blue-500 hover:bg-blue-600 
-                                duration-200 mx-2 flex justify-center items-center gap-2'
+                            bg='bg-blue-600'
+                            customStyle='mx-2'
+                            hover='hover:bg-blue-500'
                         >
                             <span>Submit</span>
                         </Button>
@@ -120,67 +123,77 @@ const Login = () => {
             <div className='absolute top-0 left-0 right-1/2 bottom-0 flex justify-center
                 items-center'
             >
-                <div className='p-8 bg-white rounded-md min-w-[500px] flex flex-col items-center'>
+                <div className='p-8 bg-white rounded-md min-w-[500px] flex flex-col gap-4 items-center'>
                     <h1 className='text-[28px] font-semibold text-main uppercase mb-8'>
                         {isRegister ? 'Register' : 'Login'}
                     </h1>
-                    {isRegister && <div className='w-full flex items-center gap-2'>
+                    {isRegister && <div className='w-full flex items-center gap-4'>
                         <InputField
                             value={payload.firstname}
                             setValue={setPayload}
-                            nameKey={'firstname'}
+                            nameKey='firstname'
                             invalidFields={invalidFields}
                             setInvalidFields={setInvalidFields}
                             handleSubmit={handleSubmit}
                             fullWidth
+                            convertStyle='w-full'
                         />
                         <InputField
                             value={payload.lastname}
                             setValue={setPayload}
-                            nameKey={'lastname'}
+                            nameKey='lastname'
                             invalidFields={invalidFields}
                             setInvalidFields={setInvalidFields}
                             handleSubmit={handleSubmit}
                             fullWidth
+                            convertStyle='w-full'
                         />
                     </div>}
                     <InputField
                         value={payload.email}
                         setValue={setPayload}
-                        nameKey={'email'}
+                        nameKey='email'
                         invalidFields={invalidFields}
                         setInvalidFields={setInvalidFields}
                         handleSubmit={handleSubmit}
                         fullWidth
+                        convertStyle='w-full'
+
+
                     />
                     {isRegister && <InputField
                         value={payload.phone}
                         setValue={setPayload}
-                        nameKey={'phone'}
+                        nameKey='phone'
                         invalidFields={invalidFields}
                         setInvalidFields={setInvalidFields}
                         handleSubmit={handleSubmit}
                         fullWidth
+                        convertStyle='w-full'
+
                     />}
                     <InputField
                         value={payload.password}
                         setValue={setPayload}
-                        nameKey={'password'}
+                        nameKey='password'
                         type='password'
                         invalidFields={invalidFields}
                         setInvalidFields={setInvalidFields}
                         handleSubmit={handleSubmit}
                         fullWidth
+                        convertStyle='w-full'
+
                     />
                     <Button
                         handleOnClick={handleSubmit}
                         fullWidth
+                        convertStyle='w-full'
                     >
                         <div className='flex justify-center items-center gap-2'>
                             <span>{isRegister ? 'Register' : 'Login'}</span>
                         </div>
                     </Button>
-                    <div className='flex items-center justify-between my-2 w-full text-sm'>
+                    <div className='flex items-center justify-between w-full text-sm'>
                         {!isRegister && <span
                             className='text-blue-500 hover:underline duration-200 cursor-pointer'
                             onClick={() => setIsForgotPassword(true)}

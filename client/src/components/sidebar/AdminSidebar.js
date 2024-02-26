@@ -1,8 +1,9 @@
 import React, { memo, Fragment, useState } from 'react'
 import logo from 'assets/logo.png'
 import { adminSidebar } from 'ultils/contants'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import icons from 'ultils/icons'
+import path from 'ultils/path'
 const { AiOutlineCaretDown, AiOutlineCaretRight } = icons
 
 const activedStyle = 'px-8 py-2 flex items-center gap-2 bg-blue-500 text-gray-100'
@@ -20,10 +21,10 @@ const AdminSidebar = () => {
     }
     return (
         <div className='bg-white h-full py-4'>
-            <div className='flex flex-col items-center gap-2 py-4'>
+            <Link to={`/${path.HOME}`} className='flex flex-col items-center gap-2 py-4'>
                 <img src={logo} alt="logo" className='w-[200px] object-contain' />
                 <small className='font-semibold'>Admin Workspace</small>
-            </div>
+            </Link>
             <div>
                 {adminSidebar.map(element => (
                     <Fragment key={element.id}>

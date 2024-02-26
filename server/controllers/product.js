@@ -3,16 +3,23 @@ const asyncHandler = require('express-async-handler')
 const slugify = require('slugify')
 
 const createProduct = asyncHandler(async (req, res) => {
-    if (Object.keys(req.body).length === 0) {
+    const { title, price, description, brand, category, color } = req.body
+    const thumb = req.files?.thumb[0]?.path
+    const images = req.files?.images?.map(element => element.path)
+    if (!title || !price || !description || !brand || !category || !color) {
         throw new Error('Missing inputs')
     }
-    if (req.body?.title) {
-        req.body.slug = slugify(req.body.title)
+    req.body.slug = slugify(title)
+    if (thumb) {
+        req.body.thumb = thumb
+    }
+    if (images) {
+        req.body.images = images
     }
     const newProduct = await Product.create(req.body)
     return res.status(200).json({
         success: newProduct ? true : false,
-        createdProduct: newProduct ? newProduct : 'Can not create new product'
+        mes: newProduct ? 'Created' : 'Can not create new product'
     })
 })
 
@@ -55,7 +62,19 @@ const getProducts = asyncHandler(async (req, res) => {
         const colorQuery = listColor.map(element => ({ color: { $regex: element, $options: 'i' } }))
         colorQueryObject = { $or: colorQuery }
     }
-    const allQuery = { ...colorQueryObject, ...formatedQueries }
+    let queriesObject = {}
+    if (queries?.search) {
+        delete formatedQueries.search
+        queriesObject = {
+            $or: [
+                { color: { $regex: queries.search, $options: 'i' } },
+                { title: { $regex: queries.search, $options: 'i' } },
+                { category: { $regex: queries.search, $options: 'i' } },
+                { brand: { $regex: queries.search, $options: 'i' } },
+            ]
+        }
+    }
+    const allQuery = { ...colorQueryObject, ...formatedQueries, ...queriesObject }
     let queryCommand = Product.find(allQuery)
     // Sorting
     // abc,efg => [abc,efg] => abc efg

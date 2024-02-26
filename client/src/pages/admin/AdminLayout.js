@@ -14,7 +14,7 @@ const AdminLayout = () => {
             <div className='fixed w-[327px] top-0 bottom-0'>
                 <AdminSidebar />
             </div>
-            <div className='ms-[327px]'>
+            <div className='pl-[327px]'>
                 <Outlet />
             </div>
         </div>

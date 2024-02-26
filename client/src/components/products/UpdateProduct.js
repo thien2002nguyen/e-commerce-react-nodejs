@@ -1,18 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { Button, InputForm, Loading, MarkdownEditor, SelectForm } from 'components';
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux';
-import { validate, toBase64 } from 'ultils/helpers';
-import defaultProduct from 'assets/default-product-image.png'
 import { toast } from 'react-toastify';
+import { toBase64 } from 'ultils/helpers';
 import icons from 'ultils/icons';
-import { apiCreateProduct } from 'apis';
-import { showModal } from 'store/app/appSlice';
+import defaultProduct from 'assets/default-product-image.png'
+import { useSelector } from 'react-redux';
 
-const { FaUpload } = icons
+const { FaUpload, MdOutlineExitToApp } = icons
 
-const CreateProduct = () => {
-    const dispath = useDispatch()
+const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
     const { categories } = useSelector(state => state.app)
     const { register, formState: { errors }, reset, handleSubmit, watch } = useForm()
     const [payload, setPayload] = useState({
@@ -22,6 +19,26 @@ const CreateProduct = () => {
         thumb: null,
         images: []
     })
+    useEffect(() => {
+        reset({
+            title: editProduct?.title || '',
+            price: editProduct?.price || '',
+            quantity: editProduct?.quantity || '',
+            color: editProduct?.color || '',
+            category: editProduct?.category || '',
+            brand: editProduct?.brand?.toLowerCase() || '',
+        })
+        setPayload({
+            description: editProduct?.description?.length > 1 ?
+                `<ul>${editProduct?.description?.map(element =>
+                    (`<li>${element}</li>`))}</ul>`.replaceAll('</li>,', '</li>')
+                : editProduct?.description[0]
+        })
+        setPreview({
+            thumb: editProduct?.thumb || '',
+            images: editProduct?.images || []
+        })
+    }, [editProduct, reset])
     const [invalidFields, setInvalidFields] = useState([])
     const changeValue = useCallback((e) => {
         setPayload(e)
@@ -73,54 +90,24 @@ const CreateProduct = () => {
             }
         }
     }, [watchImages])
-    const handleCreateProduct = async (data) => {
-        const invalids = validate(payload, setInvalidFields)
-        if (invalids === 0) {
-            if (data.category) {
-                data.category = categories?.find(element => element._id === data.category)?.title
-            }
-            const finalPayload = { ...data, ...payload }
-            const formData = new FormData()
-            for (let key of Object.entries(finalPayload)) {
-                formData.append(key[0], key[1])
-            }
-            if (finalPayload.thumb) {
-                formData.append('thumb', finalPayload.thumb[0])
-            }
-            if (finalPayload.images) {
-                for (let image of finalPayload.images) {
-                    formData.append('images', image)
-                }
-            }
-            dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
-            const response = await apiCreateProduct(formData)
-            dispath(showModal({ isShowModal: false, modalChildren: null }))
-            if (response.success) {
-                toast.success(response.mes)
-                reset()
-                setPayload({
-                    description: ''
-                })
-                setPreview({
-                    thumb: null,
-                    images: []
-                })
-                window.scrollTo(0, 0)
-            }
-            else {
-                toast.error(response.mes)
-            }
-        }
-    }
+    const handleUpdateProduct = () => { }
     return (
-        <div className='w-full'>
-            <div className='h-[75px] fixed top-0 left-[327px] right-0 px-4 border-b flex items-center justify-between bg-gray-100 z-50'>
+        <div className='w-full relative'>
+            <div className='h-[75px] fixed top-0 left-[327px] right-0 px-4 border-b flex items-center 
+                justify-between bg-gray-100 z-50'>
                 <h1 className='text-3xl font-semibold'>
-                    <span className='capitalize'>Create New Product</span>
+                    <span className='capitalize'>Update product</span>
                 </h1>
+                <Button
+                    bg='bg-gray-600'
+                    hover='hover:bg-gray-500'
+                    handleOnClick={() => setEditProduct(null)}
+                >
+                    <MdOutlineExitToApp size={24} />
+                </Button>
             </div>
             <div className='w-full px-4 pt-[92px] pb-4'>
-                <form onSubmit={handleSubmit(handleCreateProduct)}>
+                <form onSubmit={handleSubmit(handleUpdateProduct)}>
                     <InputForm
                         label='Name product'
                         register={register}
@@ -174,7 +161,7 @@ const CreateProduct = () => {
                     <div className='w-full mt-4 flex gap-4'>
                         <SelectForm
                             label='Category'
-                            options={categories?.map(element => ({ code: element._id, value: element.title }))}
+                            options={categories?.map(element => ({ code: element.title, value: element.title }))}
                             register={register}
                             id='category'
                             validate={{ required: 'Need fill this field' }}
@@ -185,7 +172,7 @@ const CreateProduct = () => {
                         />
                         <SelectForm
                             label='Brand (Optional)'
-                            options={categories?.find(element => element._id === watch('category'))?.brand?.map(item => ({ code: item, value: item }))}
+                            options={categories?.find(element => element.title === watch('category'))?.brand?.map(item => ({ code: item.toLowerCase(), value: item }))}
                             register={register}
                             id='brand'
                             styleSelect='px-4 py-2'
@@ -201,6 +188,7 @@ const CreateProduct = () => {
                             label='Description'
                             invalidFields={invalidFields}
                             setInvalidFields={setInvalidFields}
+                            value={payload.description}
                         />
                     </div>
                     <div className='flex flex-col border-2 p-4 rounded-md w-fit'>
@@ -259,7 +247,7 @@ const CreateProduct = () => {
                             {preview.images.length > 0 && preview.images.map((element, index) => (
                                 <img
                                     key={index}
-                                    src={element.path} alt="imageProduct"
+                                    src={element} alt="imageProduct"
                                     className='w-[100px] h-[100px] object-contain border-2 rounded-md'
                                 />
                             ))}
@@ -271,7 +259,7 @@ const CreateProduct = () => {
                 </form>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default CreateProduct;
+export default memo(UpdateProduct)

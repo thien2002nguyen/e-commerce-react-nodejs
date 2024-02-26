@@ -60,3 +60,10 @@ export const generateRange = (start, end) => {
     const length = end + 1 - start
     return Array.from({ length }, (_, index) => start + index)
 }
+
+export const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+});

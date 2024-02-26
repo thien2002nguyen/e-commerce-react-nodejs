@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import { Button } from '../../components';
+import { Button, Loading } from '../../components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiResetPassword } from '../../apis';
 import { toast } from 'react-toastify';
 import path from '../../ultils/path';
+import { useDispatch } from 'react-redux';
+import { showModal } from 'store/app/appSlice';
 
 const ResetPassword = () => {
+    const dispath = useDispatch()
     const [password, setPassword] = useState('')
     const { token } = useParams()
     const navigate = useNavigate()
     const handleResetPassword = async () => {
+        dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
         const response = await apiResetPassword({ password, token })
+        dispath(showModal({ isShowModal: false, modalChildren: null }))
         if (response.success) {
             toast.success(response.mes)
             navigate(`/${path.LOGIN}`)
@@ -25,7 +30,7 @@ const ResetPassword = () => {
                 z-10 flex justify-center py-8'
             >
                 <div className='flex flex-col gap-4'>
-                    <label htmlFor="new-password">Enter your new password:</label>
+                    <label htmlFor="new-password" className=''>Enter your new password:</label>
                     <input
                         type="password"
                         id='new-password'
@@ -37,8 +42,8 @@ const ResetPassword = () => {
                     <div className='w-full flex justify-end items-center'>
                         <Button
                             handleOnClick={handleResetPassword}
-                            customStyle='px-4 py-2 rounded-md text-white my-2 bg-blue-500 hover:bg-blue-600 
-                                duration-200 mx-2'
+                            bg='bg-blue-600'
+                            hover='hover:bg-blue-500'
                         >
                             <span>Submit</span>
                         </Button>

@@ -83,14 +83,14 @@ const Products = () => {
                     </span>
                     <div className='flex items-center gap-4'>
                         <SearchItem
-                            name={'price'}
+                            name='price'
                             activedClick={activedClick}
                             changeActiveFitler={changeActiveFitler}
                             type='input'
 
                         />
                         <SearchItem
-                            name={'color'}
+                            name='color'
                             activedClick={activedClick}
                             changeActiveFitler={changeActiveFitler}
                         />

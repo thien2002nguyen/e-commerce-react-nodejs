@@ -1,7 +1,15 @@
-import { RiPhoneFill, RiTruckFill, RiBillLine } from 'react-icons/ri';
-import { MdEmail, MdMenu, MdOutlineLogout, MdReply, MdGroups } from 'react-icons/md';
+import { RiPhoneFill, RiTruckFill, RiBillLine, RiDeleteBin5Fill } from 'react-icons/ri';
+import {
+    MdEmail,
+    MdMenu,
+    MdOutlineLogout,
+    MdReply,
+    MdGroups,
+    MdOutlineTransitEnterexit,
+    MdOutlineExitToApp
+} from 'react-icons/md';
 import { BsHandbagFill, BsShieldShaded } from 'react-icons/bs';
-import { FaUserCircle, FaTty } from 'react-icons/fa';
+import { FaUserCircle, FaTty, FaEdit, FaUpload } from 'react-icons/fa';
 import {
     AiFillHome,
     AiFillStar,
@@ -15,6 +23,7 @@ import {
 import { IoMdHeart, IoIosArrowForward, IoIosArrowRoundBack, IoIosArrowDown } from "react-icons/io";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { LiaLayerGroupSolid } from "react-icons/lia";
+import { GrDocumentUpdate } from "react-icons/gr";
 
 const icons = {
     RiPhoneFill,
@@ -43,6 +52,12 @@ const icons = {
     RiBillLine,
     AiOutlineCaretDown,
     AiOutlineCaretRight,
+    FaEdit,
+    RiDeleteBin5Fill,
+    GrDocumentUpdate,
+    MdOutlineTransitEnterexit,
+    FaUpload,
+    MdOutlineExitToApp
 }
 
 export default icons

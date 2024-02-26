@@ -19,19 +19,19 @@ const InputField = ({
         invalidFields && setInvalidFields([])
     }
     return (
-        <div className={`relative mb-2 ${fullWidth && 'w-full'}`}>
+        <div className={`relative ${fullWidth && 'w-full'}`}>
             {!isHideLabel && (isFocus || value.trim() !== '') && <label
                 htmlFor={nameKey}
-                className='text-[10px] absolute top-0 left-3 block bg-white px-1 capitalize animate-slide-top-sm
-                    text-gray-600'
+                className='text-[12px] absolute top-[-6px] left-3 block bg-white px-1 capitalize animate-slide-top-sm
+                    text-gray-400'
             >
                 {nameKey?.toLowerCase()}
             </label>}
             <input
                 type={type || "text"}
-                className={`px-4 py-2 rounded-sm placeholder:capitalize mt-2 w-full border 
-                    placeholder:text-sm outline-none ${convertStyle}`}
-                placeholder={convertPlaceholder || nameKey?.toLowerCase()}
+                className={`px-4 py-2 rounded-sm placeholder:capitalize border placeholder:text-gray-400
+                    placeholder:text-sm outline-none ${convertStyle && convertStyle}`}
+                placeholder={isFocus ? '' : convertPlaceholder || nameKey?.toLowerCase()}
                 id={nameKey}
                 value={value}
                 onChange={e => setValue(prev => ({ ...prev, [nameKey]: e.target.value }))}

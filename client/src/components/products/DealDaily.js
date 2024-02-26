@@ -87,9 +87,9 @@ const DealDaily = () => {
             </div>
             <div className='px-4 mt-8'>
                 <div className='flex justify-center gap-2 items-center mb-4'>
-                    <CountDown unit={'Hours'} number={hour} />
-                    <CountDown unit={'Minutes'} number={minute} />
-                    <CountDown unit={'Seconds'} number={second} />
+                    <CountDown unit='Hours' number={hour} />
+                    <CountDown unit='Minutes' number={minute} />
+                    <CountDown unit='Seconds' number={second} />
                 </div>
                 <button
                     type='button'
