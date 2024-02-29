@@ -6,6 +6,8 @@ import Slider from "react-slick";
 import { formatMoney, renderStartFromNumber } from '../../ultils/helpers'
 import icons from '../../ultils/icons';
 import DOMPurify from 'dompurify';
+import defaultProduct from 'assets/default-product-image.png'
+import { set } from 'react-hook-form';
 
 const {
     BsShieldShaded,
@@ -27,14 +29,17 @@ const DetailProduct = () => {
     const { pid, title, category } = useParams()
     const [product, setProduct] = useState(null)
     const [quantity, setQuantity] = useState(1)
-    const [currentImage, setCurrentImage] = useState(null)
+    const [currentThumb, setCurrentThumb] = useState(null)
+    const [currentProduct, setCurrentProduct] = useState(null)
     const [relatedProducts, setRelatedProduct] = useState(null)
     const [update, setUpdate] = useState(false)
+    const [variant, setVariant] = useState(null)
     const fetchProductData = async (pid) => {
         const response = await apiGetProduct(pid)
         if (response.success) {
             setProduct(response.productData)
-            setCurrentImage(response.productData?.thumb)
+            setCurrentThumb(response.productData?.thumb)
+            setCurrentProduct(response.productData)
         }
     }
     const fetchProducts = async (category) => {
@@ -86,23 +91,33 @@ const DetailProduct = () => {
     const rerender = useCallback(() => {
         setUpdate(true)
     }, [])
+    useEffect(() => {
+        if (variant) {
+            setCurrentThumb(variant?.thumb)
+            setCurrentProduct(variant)
+        }
+        else {
+            setCurrentThumb(product?.thumb)
+            setCurrentProduct(product)
+        }
+    }, [variant, product])
     return (
         <div className='w-full'>
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
                 <div className='w-main'>
-                    <h3 className='font-semibold text-[18px] mb-2'>{title}</h3>
-                    <Breadcrumb title={title} category={category} />
+                    <h3 className='font-semibold text-[18px] mb-2'>{currentProduct?.title}</h3>
+                    <Breadcrumb title={currentProduct?.title} category={category} />
                 </div>
             </div>
             <div className='w-main m-auto mt-5 grid grid-cols-5 gap-4 mb-5'>
                 <div className='col-span-2 flex flex-col'>
-                    <img src={currentImage} alt="product" className='border w-[458px] h-[458px] object-contain' />
+                    <img src={currentThumb || defaultProduct} alt="product" className='border w-[458px] h-[458px] object-contain' />
                     <div className='w-[466px] mt-4'>
                         <Slider className='detail-slick' {...settings}>
-                            {product?.images?.map((element, index) => (
+                            {currentProduct?.images?.map((element, index) => (
                                 <div key={index} className='w-full pr-2'>
                                     <img
-                                        onClick={() => setCurrentImage(element)}
+                                        onClick={() => setCurrentThumb(element)}
                                         src={element}
                                         alt="sub-product"
                                         className='border w-full h-[143px] object-contain cursor-pointer'
@@ -131,6 +146,35 @@ const DetailProduct = () => {
                         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product?.description[0]) }}
                     >
                     </div>}
+                    <div className='my-4 flex gap-4'>
+                        <span className='text-sm font-semibold me-4'>Variant</span>
+                        <div className='flex flex-wrap gap-4 items-center w-full'>
+                            <div className={`flex items-center gap-2 rounded-md p-2 border cursor-pointer 
+                                ${!variant && 'border-gray-800'}`}
+                                onClick={() => setVariant(null)}
+                            >
+                                <img src={product?.thumb} alt="thumb" className='w-8 h-8 rounded-md object-contain' />
+                                <span className='flex flex-col'>
+                                    <span className='text-sm'>{product?.color}</span>
+                                    <span className='text-xs'>{`${formatMoney(product?.price)} VNĐ`}</span>
+                                </span>
+                            </div>
+                            {product?.variants?.map(element => (
+                                <div
+                                    onClick={() => setVariant(element)}
+                                    key={element.id}
+                                    className={`flex items-center gap-2 rounded-md p-2 border cursor-pointer
+                                        ${variant?._id === element._id && 'border-gray-800'}`}
+                                >
+                                    <img src={element?.thumb} alt="thumb" className='w-8 h-8 rounded-md object-contain' />
+                                    <span className='flex flex-col'>
+                                        <span className='text-sm'>{element?.color}</span>
+                                        <span className='text-xs'>{`${formatMoney(element?.price)} VNĐ`}</span>
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                     <div className='flex flex-col gap-8'>
                         <SelectQuantity
                             quantity={quantity}

@@ -15,7 +15,7 @@ const { FaEdit, RiDeleteBin5Fill, MdOutlineTransitEnterexit, GrDocumentUpdate } 
 
 const ManageUser = () => {
     const navigate = useNavigate()
-    const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    const { register, handleSubmit, formState: { errors, isDirty }, reset } = useForm({
         email: '',
         firstname: '',
         lastname: '',
@@ -96,7 +96,8 @@ const ManageUser = () => {
     }, [editElement, reset])
     return (
         <div className='w-full'>
-            <div className='h-[75px] fixed top-0 left-[327px] right-0 px-4 border-b flex items-center justify-between bg-gray-100 z-50'>
+            <div className='h-[75px] fixed top-0 left-[327px] right-0 px-4 border-b flex items-center 
+                justify-between bg-gray-100 z-10'>
                 <h1 className='text-3xl font-semibold'>
                     <span className='capitalize'>Manage Users</span>
                 </h1>
@@ -146,7 +147,8 @@ const ManageUser = () => {
                                                     }
                                                 }}
                                                 fullWidth
-                                                styleDiv='h-16'
+                                                styleDiv='h-[52px]'
+                                                gap='gap-1'
                                                 placeholder='Enter email'
                                                 styleInput='text-sm placeholder:text-xs'
                                             /> : <span>{element.email}</span>
@@ -160,7 +162,8 @@ const ManageUser = () => {
                                                 id='firstname'
                                                 validate={{ required: 'Require fill' }}
                                                 fullWidth
-                                                styleDiv='h-16'
+                                                styleDiv='h-[52px]'
+                                                gap='gap-1'
                                                 placeholder='Enter first name'
                                                 styleInput='text-sm placeholder:text-xs'
                                             /> : <span>{element.firstname}</span>
@@ -174,7 +177,8 @@ const ManageUser = () => {
                                                 id='lastname'
                                                 validate={{ required: 'Require fill' }}
                                                 fullWidth
-                                                styleDiv='h-16'
+                                                styleDiv='h-[52px]'
+                                                gap='gap-1'
                                                 placeholder='Enter last name'
                                                 styleInput='text-sm placeholder:text-xs'
                                             /> : <span>{element.lastname}</span>
@@ -189,7 +193,8 @@ const ManageUser = () => {
                                                 validate={{ required: 'Require fill' }}
                                                 options={roles}
                                                 fullWidth
-                                                styleDiv='h-16'
+                                                styleDiv='h-[52px]'
+                                                gap='gap-1'
                                                 styleSelect='text-sm'
                                             /> : <span className='capitalize'>{element.role}</span>
                                     }</td>
@@ -208,7 +213,8 @@ const ManageUser = () => {
                                                     }
                                                 }}
                                                 fullWidth
-                                                styleDiv='h-16'
+                                                styleDiv='h-[52px]'
+                                                gap='gap-1'
                                                 placeholder='Enter phone'
                                                 styleInput='text-sm placeholder:text-xs'
                                             /> : <span>{element.phone}</span>
@@ -223,7 +229,8 @@ const ManageUser = () => {
                                                 validate={{ required: 'Require fill' }}
                                                 options={blockStatus}
                                                 fullWidth
-                                                styleDiv='h-16'
+                                                styleDiv='h-[52px]'
+                                                gap='gap-1'
                                                 styleSelect='text-sm'
                                             /> : <span>{element.isBlocked ? 'Blocked' : 'Active'}</span>
                                     }</td>
@@ -253,7 +260,7 @@ const ManageUser = () => {
                             ))}
                         </tbody>
                     </table>
-                    {editElement && <Button
+                    {isDirty && editElement && <Button
                         type='submit'
                         customStyle='flex items-center gap-2'
                         bg='bg-green-600'

@@ -69,13 +69,58 @@ module.exports = {
           '100%': {
             opacity: '1;'
           }
+        },
+        'scale-up-br': {
+          '0%': {
+            '-webkit-transform': 'scale(0.5);',
+            transform: 'scale(0.5);',
+            '-webkit-transform-origin': '100% 100%;',
+            'transform-origin': '100% 100%;',
+          },
+          '100%': {
+            '-webkit-transform': 'scale(1);',
+            transform: 'scale(1);',
+            '-webkit-transform-origin': '100% 100%;',
+            'transform-origin': '100% 100%;',
+          }
+        },
+        'un-scale-up-br': {
+          '0%': {
+            '-webkit-transform': 'scale(1);',
+            transform: 'scale(1);',
+            '-webkit-transform-origin': '100% 100%;',
+            'transform-origin': '100% 100%;',
+          },
+          '100%': {
+            '-webkit-transform': 'scale(0.5);',
+            transform: 'scale(0.5);',
+            '-webkit-transform-origin': '100% 100%;',
+            'transform-origin': '100% 100%;',
+          }
+        },
+        'scale-up-tl': {
+          '0%': {
+            '-webkit-transform': 'scale(0.5);',
+            transform: 'scale(0.5);',
+            '-webkit-transform-origin': '0% 0%;',
+            'transform-origin': '0% 0%;',
+          },
+          '100%': {
+            '-webkit-transform': 'scale(1);',
+            transform: 'scale(1);',
+            '-webkit-transform-origin': '0% 0%;',
+            'transform-origin': '0% 0%;',
+          }
         }
       },
       animation: {
         'slide-top': 'slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
         'slide-top-sm': 'slide-top-sm 0.2s linear both;',
         'slide-right': 'slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
-        'fade-in': 'fade-in 0.3s linear both;'
+        'fade-in': 'fade-in 0.3s linear both;',
+        'scale-up-tl': 'scale-up-tl 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
+        'scale-up-br': 'scale-up-br 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
+        'un-scale-up-br': 'un-scale-up-br 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
       },
       listStyleType: {
         square: 'square',

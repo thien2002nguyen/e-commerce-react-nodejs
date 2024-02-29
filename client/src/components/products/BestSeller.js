@@ -54,16 +54,20 @@ const BestSeller = () => {
                 <CustomSlider products={products} activedTab={activedTab} px />
             </div>
             <div className='w-full flex gap-4 mt-4'>
-                <img
-                    src={banner2}
-                    alt=""
-                    className='flex-1 object-contain'
-                />
-                <img
-                    src={banner1}
-                    alt=""
-                    className='flex-1 object-contain'
-                />
+                <div className='flex-auto'>
+                    <img
+                        src={banner2}
+                        alt="banner2"
+                        className='object-contain w-full' />
+                </div>
+                <div className='flex-auto'>
+                    <img
+                        src={banner1}
+                        alt="banner1"
+                        className='object-contain w-full'
+                    />
+                </div>
+
             </div>
         </div>
     );

@@ -1,31 +1,33 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Button, InputForm, Loading, MarkdownEditor, SelectForm } from 'components';
-import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux';
-import { validate, toBase64 } from 'ultils/helpers';
+import Button from 'components/buttons/Button'
+import InputForm from 'components/inputs/InputForm'
 import defaultProduct from 'assets/default-product-image.png'
-import { toast } from 'react-toastify';
-import icons from 'ultils/icons';
-import { apiCreateProduct } from 'apis';
-import { showModal } from 'store/app/appSlice';
+import React, { memo, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import icons from 'ultils/icons'
+import { toast } from 'react-toastify'
+import { toBase64 } from 'ultils/helpers'
+import Swal from 'sweetalert2'
+import { useDispatch } from 'react-redux'
+import { showModal } from 'store/app/appSlice'
+import Loading from 'components/common/Loading'
+import { apiAddVariant } from 'apis'
 
-const { FaUpload, IoCreateOutline } = icons
+const { FaUpload, MdOutlineExitToApp, GrDocumentUpdate } = icons
 
-const CreateProduct = () => {
+const CustomizeVariant = ({ customizeVariants, render, setCustomizeVariants }) => {
     const dispath = useDispatch()
-    const { categories } = useSelector(state => state.app)
     const { register, formState: { errors }, reset, handleSubmit, watch } = useForm()
-    const [payload, setPayload] = useState({
-        description: ''
-    })
     const [preview, setPreview] = useState({
         thumb: null,
         images: []
     })
-    const [invalidFields, setInvalidFields] = useState([])
-    const changeValue = useCallback((e) => {
-        setPayload(e)
-    }, [])
+    useEffect(() => {
+        reset({
+            title: customizeVariants?.title || '',
+            price: customizeVariants?.price || '',
+            color: customizeVariants?.color || '',
+        })
+    }, [customizeVariants, reset])
     const watchThumb = watch('thumb') || null
     const watchImages = watch('images') || null
     const handlePreviewThumb = async (file) => {
@@ -33,7 +35,6 @@ const CreateProduct = () => {
             if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
                 toast.warning('Please upload a png or jpg file')
                 return
-
             }
             const base64Thumb = await toBase64(file)
             if (base64Thumb) {
@@ -73,38 +74,32 @@ const CreateProduct = () => {
             }
         }
     }, [watchImages])
-    const handleCreateProduct = async (data) => {
-        const invalids = validate(payload, setInvalidFields)
-        if (invalids === 0) {
-            if (data.category) {
-                data.category = categories?.find(element => element._id === data.category)?.title
-            }
-            const finalPayload = { ...data, ...payload }
+    const handleCustomizeVariant = async (data) => {
+        if (data?.color?.toLowerCase() === customizeVariants?.color?.toLowerCase()
+            || customizeVariants?.variants?.some(element => element.color?.toLowerCase() === data?.color?.toLowerCase())) {
+            Swal.fire('Oops!', 'You need to choose another color for the product', 'info');
+            return
+        }
+        else {
             const formData = new FormData()
-            for (let key of Object.entries(finalPayload)) {
+            for (let key of Object.entries(data)) {
                 formData.append(key[0], key[1])
             }
-            if (finalPayload.thumb) {
-                formData.append('thumb', finalPayload.thumb[0])
+            if (data.thumb) {
+                formData.append('thumb', data.thumb[0])
             }
-            if (finalPayload.images) {
-                for (let image of finalPayload.images) {
+            if (data.images) {
+                for (let image of data.images) {
                     formData.append('images', image)
                 }
             }
             dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
-            const response = await apiCreateProduct(formData)
+            const response = await apiAddVariant(customizeVariants?._id, formData)
             dispath(showModal({ isShowModal: false, modalChildren: null }))
             if (response.success) {
                 toast.success(response.mes)
-                reset()
-                setPayload({
-                    description: ''
-                })
-                setPreview({
-                    thumb: null,
-                    images: []
-                })
+                render()
+                setPreview({ thumb: '', images: [] })
                 window.scrollTo(0, 0)
             }
             else {
@@ -113,98 +108,63 @@ const CreateProduct = () => {
         }
     }
     return (
-        <div className='w-full'>
+        <div className='w-full relative'>
             <div className='h-[75px] fixed top-0 left-[327px] right-0 px-4 border-b flex items-center 
                 justify-between bg-gray-100 z-10'>
                 <h1 className='text-3xl font-semibold'>
-                    <span className='capitalize'>Create New Product</span>
+                    <span className='capitalize'>Customize Variant of Product</span>
                 </h1>
+                <Button
+                    bg='bg-gray-600'
+                    hover='hover:bg-gray-500'
+                    handleOnClick={() => setCustomizeVariants(null)}
+                    customStyle='flex items-center gap-2'
+                >
+                    <span>Cancel</span>
+                    <MdOutlineExitToApp />
+                </Button>
             </div>
             <div className='w-full px-4 pt-[92px] pb-4'>
-                <form onSubmit={handleSubmit(handleCreateProduct)}>
-                    <InputForm
-                        label='Name product'
-                        register={register}
-                        errors={errors}
-                        id='title'
-                        validate={{
-                            required: 'Need fill this field'
-                        }}
-                        fullWidth
-                        placeholder='Name of new product'
-                        styleInput='px-4 py-2'
-                        styleDiv='h-24'
-                    />
+                <form onSubmit={handleSubmit(handleCustomizeVariant)}>
+                    <div className='w-full flex gap-4'>
+                        <InputForm
+                            label='Original name'
+                            register={register}
+                            errors={errors}
+                            id='title'
+                            validate={{ required: 'Need fill this field' }}
+                            fullWidth
+                            placeholder='Name of product'
+                            styleInput='px-4 py-2'
+                            styleDiv='flex-auto h-24'
+                        />
+                    </div>
                     <div className='w-full mt-4 flex gap-4'>
                         <InputForm
-                            label='Price'
+                            label='Price variant'
                             register={register}
                             errors={errors}
                             id='price'
                             validate={{ required: 'Need fill this field' }}
                             fullWidth
-                            placeholder='Price of new product'
+                            placeholder='Price of product'
                             type='number'
                             styleInput='px-4 py-2'
                             styleDiv='flex-auto h-24'
                         />
                         <InputForm
-                            label='Quantity'
-                            register={register}
-                            errors={errors}
-                            id='quantity'
-                            validate={{ required: 'Need fill this field' }}
-                            fullWidth
-                            placeholder='Quantity of new product'
-                            type='number'
-                            styleInput='px-4 py-2'
-                            styleDiv='flex-auto h-24'
-                        />
-                        <InputForm
-                            label='Color'
+                            label='Color variant'
                             register={register}
                             errors={errors}
                             id='color'
                             validate={{ required: 'Need fill this field' }}
                             fullWidth
-                            placeholder='Color of new product'
+                            placeholder='Color of product'
                             styleInput='px-4 py-2'
                             styleDiv='flex-auto h-24'
                         />
                     </div>
-                    <div className='w-full mt-4 flex gap-4'>
-                        <SelectForm
-                            label='Category'
-                            options={categories?.map(element => ({ code: element._id, value: element.title }))}
-                            register={register}
-                            id='category'
-                            validate={{ required: 'Need fill this field' }}
-                            styleSelect='px-4 py-2'
-                            errors={errors}
-                            fullWidth
-                            styleDiv='flex-auto h-24'
-                        />
-                        <SelectForm
-                            label='Brand (Optional)'
-                            options={categories?.find(element => element._id === watch('category'))?.brand?.map(item => ({ code: item, value: item }))}
-                            register={register}
-                            id='brand'
-                            styleSelect='px-4 py-2'
-                            errors={errors}
-                            fullWidth
-                            styleDiv='flex-auto h-24'
-                        />
-                    </div>
-                    <div className='py-4'>
-                        <MarkdownEditor
-                            name='description'
-                            changeValue={changeValue}
-                            label='Description'
-                            invalidFields={invalidFields}
-                            setInvalidFields={setInvalidFields}
-                        />
-                    </div>
-                    <div className='flex flex-col border-2 p-4 rounded-md w-fit gap-4'>
+                    <div className='flex flex-col border-2 p-4 rounded-md w-fit gap-4 mt-4'>
                         <span className='text-gray-700'>Upload thumb</span>
                         <label htmlFor="thumb" className='flex items-center gap-2 bg-red-600 text-white 
                             w-fit px-4 py-2 text-sm rounded-md hover:bg-red-500 duration-200 cursor-pointer'>
@@ -255,7 +215,7 @@ const CreateProduct = () => {
                             {preview.images.length > 0 && preview.images.map((element, index) => (
                                 <img
                                     key={index}
-                                    src={element.path} alt="imageProduct"
+                                    src={element.path ? element.path : element} alt="imageProduct"
                                     className='w-[100px] h-[100px] object-contain border-2 rounded-md'
                                 />
                             ))}
@@ -269,18 +229,18 @@ const CreateProduct = () => {
                     <div className='mt-4 w-full flex justify-center'>
                         <Button
                             type='submit'
-                            bg='bg-blue-600'
-                            hover='hover:bg-blue-500'
+                            bg='bg-yellow-600'
+                            hover='hover:bg-yellow-500'
                             customStyle='flex items-center gap-2'
                         >
-                            <span>Create new product</span>
-                            <IoCreateOutline />
+                            <span>Add variant</span>
+                            <GrDocumentUpdate />
                         </Button>
                     </div>
                 </form>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default CreateProduct;
+export default memo(CustomizeVariant)

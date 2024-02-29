@@ -121,7 +121,7 @@ export const VoteOptions = [
     },
 ]
 
-const { AiOutlineDashboard, MdGroups, LiaLayerGroupSolid, RiBillLine } = icons
+const { AiOutlineDashboard, MdGroups, LiaLayerGroupSolid, RiBillLine, ImExit } = icons
 
 export const adminSidebar = [
     {
@@ -161,6 +161,13 @@ export const adminSidebar = [
         path: `/${path.ADMIN}/${path.MANAGE_ORDER}`,
         icon: <RiBillLine size={20} />
     },
+    {
+        id: 5,
+        type: 'single',
+        text: 'Exit',
+        path: `/${path.HOME}`,
+        icon: <ImExit size={20} />
+    },
 ]
 
 export const roles = [
@@ -171,4 +178,44 @@ export const roles = [
 export const blockStatus = [
     { code: false, value: 'Active' },
     { code: true, value: 'Blocked' }
+]
+
+const { MdBroadcastOnPersonal, FaShoppingCart, TbFileLike, MdHistory } = icons
+
+export const memberSidebar = [
+    {
+        id: 1,
+        type: 'single',
+        text: 'Personal',
+        path: `/${path.MEMBER}/${path.PERSONAL}`,
+        icon: <MdBroadcastOnPersonal size={20} />
+    },
+    {
+        id: 2,
+        type: 'single',
+        text: 'My cart',
+        path: `/${path.MEMBER}/${path.MY_CART}`,
+        icon: <FaShoppingCart size={20} />
+    },
+    {
+        id: 3,
+        type: 'single',
+        text: 'Wish list',
+        path: `/${path.MEMBER}/${path.WISHLIST}`,
+        icon: <TbFileLike size={20} />,
+    },
+    {
+        id: 4,
+        type: 'single',
+        text: 'Buy histories',
+        path: `/${path.MEMBER}/${path.HISTORY}`,
+        icon: <MdHistory size={20} />
+    },
+    {
+        id: 5,
+        type: 'single',
+        text: 'Exit',
+        path: `/${path.HOME}`,
+        icon: <ImExit size={20} />
+    },
 ]

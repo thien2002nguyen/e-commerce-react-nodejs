@@ -28,8 +28,8 @@ const MarkdownEditor = ({ label, value, changeValue, name, invalidFields, setInv
                 />
 
             </div>
-            <div className='mt-2 h-4'>
-                {invalidFields?.some(elment => elment.name === name) && <small className='text-xs text-main'>
+            <div className='h-4'>
+                {invalidFields?.some(elment => elment.name === name) && <small className='text-[10px] text-main'>
                     {invalidFields?.find(element => element.name === name)?.mes}
                 </small>}
             </div>

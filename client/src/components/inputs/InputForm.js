@@ -12,10 +12,12 @@ const InputForm = ({
     placeholder,
     fullWidth,
     styleDiv,
-    styleInput
+    styleInput,
+    readOnly,
+    gap = 'gap-2'
 }) => {
     return (
-        <div className={`flex flex-col gap-2 ${styleDiv && styleDiv}`}>
+        <div className={`flex flex-col ${gap && gap} ${styleDiv && styleDiv}`}>
             {label && <label
                 htmlFor={id}
                 className='capitalize text-gray-800'
@@ -29,6 +31,7 @@ const InputForm = ({
                 placeholder={placeholder}
                 className={`p-1 rounded-sm placeholder:capitalize border 
                     placeholder:text-sm outline-none ${styleInput && styleInput} ${fullWidth && 'w-full'}`}
+                readOnly={readOnly}
             />
             {errors[id] && <small className='text-main text-[10px]'>{errors[id]?.message}</small>}
         </div>

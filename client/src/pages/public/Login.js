@@ -158,8 +158,6 @@ const Login = () => {
                         handleSubmit={handleSubmit}
                         fullWidth
                         convertStyle='w-full'
-
-
                     />
                     {isRegister && <InputField
                         value={payload.phone}
@@ -182,7 +180,6 @@ const Login = () => {
                         handleSubmit={handleSubmit}
                         fullWidth
                         convertStyle='w-full'
-
                     />
                     <Button
                         handleOnClick={handleSubmit}

@@ -111,24 +111,12 @@ const getProducts = asyncHandler(async (req, res) => {
     }
 })
 
-const updateProduct = asyncHandler(async (req, res) => {
-    const { pid } = req.params
-    if (req.body?.title) {
-        req.body.slug = slugify(req.body.title)
-    }
-    const updatedProduct = await Product.findByIdAndUpdate(pid, req.body)
-    return res.status(200).json({
-        success: updatedProduct ? true : false,
-        updatedProduct: updatedProduct ? updatedProduct : 'Can not update product'
-    })
-})
-
 const deleteProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params
     const deletedProduct = await Product.findByIdAndDelete(pid, req.body)
     return res.status(200).json({
         success: deletedProduct ? true : false,
-        deletedProduct: deletedProduct ? deletedProduct : 'Can not delete product'
+        mes: deletedProduct ? 'Deleted' : 'Can not delete product'
     })
 })
 
@@ -166,20 +154,50 @@ const ratings = asyncHandler(async (req, res) => {
     })
 })
 
-const uploadImagesProduct = asyncHandler(async (req, res) => {
+const updateProduct = asyncHandler(async (req, res) => {
     const { pid } = req.params
-    if (!req.files) {
+    const thumb = req.files?.thumb?.[0]?.path
+    const images = req.files?.images?.map(element => element.path)
+    if (req.body?.title) {
+        req.body.slug = slugify(req.body.title)
+    }
+    if (thumb) {
+        req.body.thumb = thumb
+    }
+    else {
+        delete req.body.thumb
+    }
+    if (images) {
+        req.body.images = images
+    }
+    else {
+        delete req.body.images
+    }
+    const updatedProduct = await Product.findByIdAndUpdate(pid, req.body, { new: true })
+    return res.status(200).json({
+        success: updatedProduct ? true : false,
+        mes: updatedProduct ? 'Updated' : 'Can not update product'
+    })
+})
+
+const addVariant = asyncHandler(async (req, res) => {
+    const { pid } = req.params
+    const { title, price, color } = req.body
+    const thumb = req.files?.thumb[0]?.path
+    const images = req.files?.images?.map(element => element.path)
+    if (!title || !price || !color) {
         throw new Error('Missing inputs')
     }
     const response = await Product.findByIdAndUpdate(pid, {
         $push: {
-            images:
-                { $each: req.files.map(element => element.path) }
+            variants: {
+                color, price, title, thumb, images
+            }
         }
     }, { new: true })
     return res.status(200).json({
         success: response ? true : false,
-        updateProduct: response ? response : 'Can not upload images product'
+        mes: response ? 'Added variant successfully' : 'Failed to add the variant'
     })
 })
 
@@ -190,5 +208,5 @@ module.exports = {
     updateProduct,
     deleteProduct,
     ratings,
-    uploadImagesProduct,
+    addVariant,
 }
