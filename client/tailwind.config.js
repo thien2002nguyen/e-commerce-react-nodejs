@@ -10,7 +10,7 @@ module.exports = {
         main: ['Poppins', 'sans-serif;']
       },
       width: {
-        main: '1220px'
+        main: '1180px'
       },
       backgroundColor: {
         main: '#ee3131'
@@ -60,6 +60,26 @@ module.exports = {
           '100%': {
             '-webkit-transform': 'translateX(0);',
             transform: 'translateX(0);'
+          }
+        },
+        'slide-left': {
+          '0%': {
+            '-webkit-transform': 'translateX(1000px);',
+            transform: 'translateX(1000px);'
+          },
+          '100%': {
+            '-webkit-transform': 'translateX(0);',
+            transform: 'translateX(0);'
+          }
+        },
+        'slide-left-out': {
+          '0%': {
+            '-webkit-transform': 'translateX(0);',
+            transform: 'translateX(0);'
+          },
+          '100%': {
+            '-webkit-transform': 'translateX(1000px);',
+            transform: 'translateX(1000px);'
           }
         },
         'fade-in': {
@@ -117,10 +137,16 @@ module.exports = {
         'slide-top': 'slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
         'slide-top-sm': 'slide-top-sm 0.2s linear both;',
         'slide-right': 'slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
-        'fade-in': 'fade-in 0.3s linear both;',
+        'slide-left': 'slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
+        'slide-left-out': 'slide-left-out 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
+        'fade-in': 'fade-in 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
         'scale-up-tl': 'scale-up-tl 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
         'scale-up-br': 'scale-up-br 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
         'un-scale-up-br': 'un-scale-up-br 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
+      },
+      gridTemplateRows: {
+        '10': 'repeat(10, minmax(0, 1fr))',
+        'layout': '200px minmax(900px, 1fr) 100px',
       },
       listStyleType: {
         square: 'square',

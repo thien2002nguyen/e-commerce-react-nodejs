@@ -1,4 +1,4 @@
-import React, { memo, Fragment, useState, useEffect } from 'react'
+import React, { memo, Fragment, useState } from 'react'
 import defaultAvatar from 'assets/default_avatar.png'
 import { memberSidebar } from 'ultils/contants'
 import { NavLink } from 'react-router-dom'
@@ -20,10 +20,11 @@ const MemberSidebar = () => {
             setActived(prev => [...prev, tabID])
         }
     }
+    console.log(current?.avatar);
     return (
         <div className='bg-white h-full py-4'>
             <div className='flex flex-col justify-center items-center gap-2 py-4'>
-                <img src={current?.avatar || defaultAvatar} alt="avater" className='w-16 h-16 object-cover rounded-full' />
+                <img src={current?.avatar || defaultAvatar} alt="avatar" className='w-16 h-16 object-cover rounded-full' />
                 <small className='font-semibold'>{`${current?.lastname} ${current?.firstname}`}</small>
             </div>
             <div>

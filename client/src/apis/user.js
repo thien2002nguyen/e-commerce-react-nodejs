@@ -52,3 +52,14 @@ export const apiUpdateCurrent = (data) => axios({
     method: 'put',
     data
 })
+
+export const apiUpdateCart = (data) => axios({
+    url: '/user/updatecart',
+    method: 'put',
+    data
+})
+
+export const apiRemoveCart = (pid, color) => axios({
+    url: `/user/removecart/${pid}/${color}`,
+    method: 'delete',
+})

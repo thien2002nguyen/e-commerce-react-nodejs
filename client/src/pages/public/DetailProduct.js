@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { createSearchParams, useParams } from 'react-router-dom';
 import { apiGetProduct, apiGetProducts } from '../../apis/products';
 import { Breadcrumb, Button, CustomSlider, ProductExtraInfoItem, ProductInfomatin, SelectQuantity } from '../../components';
 import Slider from "react-slick";
@@ -7,7 +7,13 @@ import { formatMoney, renderStartFromNumber } from '../../ultils/helpers'
 import icons from '../../ultils/icons';
 import DOMPurify from 'dompurify';
 import defaultProduct from 'assets/default-product-image.png'
-import { set } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+import withBaseComponent from 'hocs/withBaseComponent';
+import { apiUpdateCart } from 'apis';
+import Swal from 'sweetalert2';
+import path from 'ultils/path';
+import { toast } from 'react-toastify';
+import { getCurrent } from 'store/user/asyncActions';
 
 const {
     BsShieldShaded,
@@ -25,8 +31,9 @@ const settings = {
     slidesToScroll: 1,
 };
 
-const DetailProduct = () => {
-    const { pid, title, category } = useParams()
+const DetailProduct = ({ navigate, dispatch, location }) => {
+    const { pid, category } = useParams()
+    const { current } = useSelector(state => state.user)
     const [product, setProduct] = useState(null)
     const [quantity, setQuantity] = useState(1)
     const [currentThumb, setCurrentThumb] = useState(null)
@@ -100,7 +107,42 @@ const DetailProduct = () => {
             setCurrentThumb(product?.thumb)
             setCurrentProduct(product)
         }
+        setQuantity(1)
     }, [variant, product])
+    const handleAddToCart = async () => {
+        if (!current) {
+            return Swal.fire({
+                title: 'Oops!',
+                text: 'Please login first',
+                icon: 'info',
+                cancelButtonText: 'Not now',
+                showCancelButton: true,
+                confirmButtonText: 'Go login'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate({
+                        pathname: `/${path.LOGIN}`,
+                        search: createSearchParams({ redirect: location.pathname }).toString()
+                    })
+                }
+            })
+        }
+        const response = await apiUpdateCart({
+            pid,
+            color: currentProduct?.color,
+            quantity,
+            price: currentProduct?.price,
+            thumb: currentThumb,
+            title: currentProduct?.title
+        })
+        if (response.success) {
+            toast.success(response.mes)
+            dispatch(getCurrent())
+        }
+        else {
+            toast.error(response.mes)
+        }
+    }
     return (
         <div className='w-full'>
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
@@ -109,7 +151,7 @@ const DetailProduct = () => {
                     <Breadcrumb title={currentProduct?.title} category={category} />
                 </div>
             </div>
-            <div className='w-main m-auto mt-5 grid grid-cols-5 gap-4 mb-5'>
+            <div className='w-main m-auto mt-8 grid grid-cols-5 gap-4 mb-5'>
                 <div className='col-span-2 flex flex-col'>
                     <img src={currentThumb || defaultProduct} alt="product" className='border w-[458px] h-[458px] object-contain' />
                     <div className='w-[466px] mt-4'>
@@ -127,9 +169,9 @@ const DetailProduct = () => {
                         </Slider>
                     </div>
                 </div>
-                <div className='col-span-2 flex flex-col gap-5'>
+                <div className='col-span-2 flex flex-col gap-6'>
                     <div className='flex items-center justify-between'>
-                        <h2 className='text-[30px] font-semibold'>{`${formatMoney(product?.price)} VNĐ`}</h2>
+                        <h2 className='text-[30px] font-semibold'>{`${formatMoney(currentProduct?.price)} VNĐ`}</h2>
                         <span className='text-sm text-main'>{`In stock: ${product?.quantity}`}</span>
                     </div>
                     <div className='flex justify-start items-center'>
@@ -159,10 +201,10 @@ const DetailProduct = () => {
                                     <span className='text-xs'>{`${formatMoney(product?.price)} VNĐ`}</span>
                                 </span>
                             </div>
-                            {product?.variants?.map(element => (
+                            {product?.variants?.map((element, index) => (
                                 <div
                                     onClick={() => setVariant(element)}
-                                    key={element.id}
+                                    key={index}
                                     className={`flex items-center gap-2 rounded-md p-2 border cursor-pointer
                                         ${variant?._id === element._id && 'border-gray-800'}`}
                                 >
@@ -181,7 +223,7 @@ const DetailProduct = () => {
                             handleQuantity={handleQuantity}
                             handleChangeQuantity={handleChangeQuantity}
                         />
-                        <Button fullWidth>Add to Cart</Button>
+                        <Button fullWidth handleOnClick={handleAddToCart}>Add to Cart</Button>
                     </div>
                 </div>
                 <div className='col-span-1 flex flex-col gap-3'>
@@ -200,11 +242,11 @@ const DetailProduct = () => {
                     OTHER CUSTOMERS ALSO BUY:
                 </h3>
                 <div className='mt-4 mx-[10px] '>
-                    <CustomSlider products={relatedProducts} normal />
+                    <CustomSlider products={relatedProducts} normal showDescription={true} />
                 </div>
             </div>
         </div>
     );
 };
 
-export default DetailProduct;
+export default withBaseComponent(DetailProduct);

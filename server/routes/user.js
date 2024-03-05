@@ -14,9 +14,10 @@ router.put('/resetpassword', ctrls.resetPassword)
 router.get('/', [verifyAccessToken, isAdmin], ctrls.getUsers)
 router.put('/current', verifyAccessToken, uploader.single('avatar'), ctrls.updateUser)
 router.put('/address', verifyAccessToken, ctrls.updateUserAddress)
-router.put('/cart', verifyAccessToken, ctrls.updateCart)
+router.put('/updatecart', verifyAccessToken, ctrls.updateProductCart)
 router.delete('/:uid', [verifyAccessToken, isAdmin], ctrls.deleteUser)
 router.put('/:uid', [verifyAccessToken, isAdmin], ctrls.updateUserByAdmin)
+router.delete('/removecart/:pid/:color', verifyAccessToken, ctrls.removeProductInCart)
 
 module.exports = router
 

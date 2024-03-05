@@ -10,8 +10,9 @@ import {
     MdBroadcastOnPersonal,
     MdHistory
 } from 'react-icons/md';
-import { BsHandbagFill, BsShieldShaded } from 'react-icons/bs';
+import { BsHandbagFill, BsShieldShaded, BsCartPlus, BsFillCartCheckFill } from 'react-icons/bs';
 import { FaUserCircle, FaTty, FaEdit, FaUpload, FaShoppingCart } from 'react-icons/fa';
+import { FaArrowRightLong } from "react-icons/fa6";
 import { TbFileLike } from "react-icons/tb";
 import {
     AiFillHome,
@@ -24,11 +25,11 @@ import {
     AiOutlineCaretRight
 } from 'react-icons/ai';
 import { IoMdHeart, IoIosArrowForward, IoIosArrowRoundBack, IoIosArrowDown } from "react-icons/io";
-import { IoCreateOutline } from "react-icons/io5";
+import { IoCreateOutline, IoClose } from "react-icons/io5";
 import { BiDotsHorizontalRounded, BiCustomize } from "react-icons/bi";
 import { LiaLayerGroupSolid } from "react-icons/lia";
 import { GrDocumentUpdate } from "react-icons/gr";
-import { ImExit } from "react-icons/im";
+import { ImExit, ImBin } from "react-icons/im";
 
 const icons = {
     RiPhoneFill,
@@ -70,7 +71,12 @@ const icons = {
     TbFileLike,
     MdHistory,
     ImExit,
-    RiAdminLine
+    RiAdminLine,
+    IoClose,
+    BsCartPlus,
+    BsFillCartCheckFill,
+    FaArrowRightLong,
+    ImBin,
 }
 
 export default icons

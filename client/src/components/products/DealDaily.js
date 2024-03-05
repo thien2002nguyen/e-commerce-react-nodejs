@@ -4,18 +4,19 @@ import { apiGetProducts } from 'apis/products'
 import { renderStartFromNumber, formatMoney, secondsToHsm } from 'ultils/helpers';
 import { CountDown } from 'components'
 import moment from 'moment'
+import withBaseComponent from 'hocs/withBaseComponent';
 
 const { AiFillStar, MdMenu } = icons
 let idInterval
 
-const DealDaily = () => {
+const DealDaily = ({ navigate }) => {
     const [dealDaily, setDealDaily] = useState()
     const [hour, setHour] = useState(0)
     const [minute, setMinute] = useState(0)
     const [second, setSecond] = useState(0)
     const [expireTime, setExpireTime] = useState(false)
     const fetchDealDaily = async () => {
-        const response = await apiGetProducts({ limit: 1, page: Math.round(Math.random() * 7), totalRatings: 5 })
+        const response = await apiGetProducts({ limit: 1, page: Math.round(Math.random() * 7), sort: '-totalRatings' })
         if (response.success) {
             setDealDaily(response.products[0])
             const today = `${moment().format('MM/DD/YYYY')} 0:00:00`
@@ -95,6 +96,7 @@ const DealDaily = () => {
                     type='button'
                     className='flex gap-2 justify-center items-center w-full bg-main
                         hover:bg-gray-800 text-white font-medium py-2 duration-200'
+                    onClick={() => navigate(`/${dealDaily?.category?.toLowerCase()}/${dealDaily._id}/${dealDaily.title}`)}
                 >
                     <MdMenu />
                     <span>Options</span>
@@ -104,4 +106,4 @@ const DealDaily = () => {
     );
 };
 
-export default memo(DealDaily);
+export default withBaseComponent(memo(DealDaily));

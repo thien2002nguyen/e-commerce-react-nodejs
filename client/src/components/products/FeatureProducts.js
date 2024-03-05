@@ -9,7 +9,7 @@ import banner4 from 'assets/banner4-bottom-home2_92e12df0-50.png'
 const FeatureProducts = () => {
     const [products, setProducts] = useState(null)
     const fetchProducts = async () => {
-        const response = await apiGetProducts({ limit: 9, totalRatings: 5 })
+        const response = await apiGetProducts({ limit: 9, sort: '-totalRatings' })
         if (response.success) {
             setProducts(response.products)
         }
@@ -33,7 +33,7 @@ const FeatureProducts = () => {
                     />
                 ))}
             </div>
-            <div className='grid grid-cols-4 grid-rows-2 grid-flow-col gap-[30px]'>
+            <div className='mt-8 grid grid-cols-4 grid-rows-2 grid-flow-col gap-[30px]'>
                 <img
                     src={banner1}
                     alt=""

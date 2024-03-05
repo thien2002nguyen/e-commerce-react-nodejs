@@ -11,6 +11,7 @@ import {
   Products,
   FinalRegister,
   ResetPassword,
+  DetailCart,
 } from './pages/public'
 import {
   AdminLayout,
@@ -52,6 +53,7 @@ function App() {
           <Route path={path.OUR_SERVICES} element={<Services />} />
           <Route path={path.FAQ} element={<FAQ />} />
           <Route path={path.ALL} element={<Home />} />
+          <Route path={path.DETAIL_CART} element={<DetailCart />} />
         </Route>
         <Route path={path.ADMIN} element={<AdminLayout />}>
           <Route path={path.DASHBOARD} element={<Dashboard />} />

@@ -74,7 +74,7 @@ const ProductInfomatin = ({ product, rerender }) => {
                 ))}
             </div>
             <div className='w-full border min-h-28'>
-                <div className={isActived ? 'animate-fade-in' : ''}>
+                <div className={isActived ? 'animate-fade-in w-full' : 'w-full'}>
                     {activedTab === 1 && product?.description?.length > 1 &&
                         <ul className='text-sm text-gray-700 leading-6 list-square p-4 pl-8'>
                             {product?.description?.map((element, index) => (

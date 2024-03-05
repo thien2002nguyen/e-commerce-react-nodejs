@@ -40,8 +40,11 @@ const Products = () => {
         delete queries.from
         delete queries.to
         const query = { ...priceQuery, ...queries }
+        if (category?.toLowerCase() !== ':category') {
+            query.category = category
+        }
         fetchProductsByCategory(query)
-    }, [params])
+    }, [params, category])
     const changeActiveFitler = useCallback((name) => {
         if (activedClick === name) {
             setActivedClick(null)
@@ -71,9 +74,9 @@ const Products = () => {
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
                 <div className='w-main'>
                     <h3 className='font-semibold uppercase text-[18px] mb-2'>
-                        {category}
+                        {category === ':category' ? 'products' : category}
                     </h3>
-                    <Breadcrumb category={category} />
+                    <Breadcrumb category={category === ':category' ? 'Products' : category} />
                 </div>
             </div>
             <div className='w-main border p-3 flex justify-between mt-8 mx-auto'>
@@ -105,7 +108,7 @@ const Products = () => {
             </div>
             <div className='my-8 w-main mx-auto grid grid-cols-4 gap-4'>
                 {products?.map((element, index) => (
-                    <Product key={index} productData={element} normal />
+                    <Product key={index} productData={element} normal showDescription />
                 ))}
             </div>
             <div className='w-main mx-auto my-4 flex justify-center'>

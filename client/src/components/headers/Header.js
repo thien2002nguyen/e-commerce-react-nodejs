@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import path from 'ultils/path'
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from 'store/user/userSlice';
+import { showModal } from 'store/app/appSlice';
+import Cart from 'components/products/Cart';
 
 const { RiPhoneFill, MdEmail, BsHandbagFill, FaUserCircle, RiAdminLine, MdBroadcastOnPersonal, ImExit } = icons
 const Header = () => {
@@ -42,9 +44,12 @@ const Header = () => {
                     <span>Online Support 24/7</span>
                 </div>
                 {current && <Fragment>
-                    <div className='cursor-pointer flex items-center px-6 border-l justify-center gap-2'>
+                    <div
+                        className='cursor-pointer flex items-center px-6 border-l justify-center gap-2'
+                        onClick={() => dispatch(showModal({ isShowModal: true, modalChildren: <Cart /> }))}
+                    >
                         <BsHandbagFill color='red' />
-                        <span>0 item(s)</span>
+                        <span>{`${current?.cart?.length || 0} item(s)`}</span>
                     </div>
                     <div
                         className='cursor-pointer flex items-center border-l px-6 justify-center gap-2 relative'

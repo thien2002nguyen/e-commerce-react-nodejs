@@ -117,7 +117,13 @@ const login = asyncHandler(async (req, res) => {
 const getCurrent = asyncHandler(async (req, res) => {
     const { _id } = req.user
     // select | tên các trường cần lấy | thêm (-) trước các trường không cần lấy
-    const user = await User.findById(_id).select('-refreshToken -password')
+    const user = await User.findById(_id).select('-refreshToken -password').populate({
+        path: 'cart',
+        populate: {
+            path: 'product',
+            select: 'quantity'
+        }
+    })
     return res.status(200).json({
         success: user ? true : false,
         rs: user ? user : 'User not found'
@@ -319,38 +325,61 @@ const updateUserAddress = asyncHandler(async (req, res) => {
     })
 })
 
-const updateCart = asyncHandler(async (req, res) => {
+const updateProductCart = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const { pid, quantity, color } = req.body
-    if (!pid || !quantity || !color) {
+    const { pid, quantity = 1, color, price, thumb, title } = req.body
+    if (!pid || !color || !price || !thumb || !title) {
         throw new Error('Missing inputs')
     }
     const user = await User.findById(_id).select('cart')
     const alreadyProduct = user?.cart?.find(element => element.product.toString() === pid)
-    if (alreadyProduct) {
-        if (alreadyProduct.color === color) {
-            const response = await User.updateOne(
-                { cart: { $elemMatch: alreadyProduct } }, { $set: { 'cart.$.quantity': quantity } }, { new: true })
-            return res.status(200).json({
-                success: response ? true : false,
-                updatedUser: response ? response : 'Something went wrong'
-            })
-        } else {
-            const response = await User.findByIdAndUpdate(_id,
-                { $push: { cart: { product: pid, quantity, color } } }, { new: true })
-            return res.status(200).json({
-                success: response ? true : false,
-                updatedUser: response ? response : 'Something went wrong'
-            })
-        }
-    } else {
-        const response = await User.findByIdAndUpdate(_id,
-            { $push: { cart: { product: pid, quantity, color } } }, { new: true })
+    if (alreadyProduct && alreadyProduct?.color === color) {
+        const response = await User.updateOne(
+            { cart: { $elemMatch: alreadyProduct } },
+            {
+                $set: {
+                    'cart.$.quantity': quantity,
+                    'cart.$.price': price,
+                    'cart.$.thumb': thumb,
+                    'cart.$.title': title
+                }
+            },
+            { new: true })
         return res.status(200).json({
             success: response ? true : false,
-            updatedUser: response ? response : 'Something went wrong'
+            mes: response ? 'Product added to cart' : 'Something went wrong'
+        })
+    } else {
+        const response = await User.findByIdAndUpdate(_id,
+            { $push: { cart: { product: pid, quantity, color, price, thumb, title } } }, { new: true })
+        return res.status(200).json({
+            success: response ? true : false,
+            mes: response ? 'Product added to cart' : 'Something went wrong'
         })
     }
+})
+
+const removeProductInCart = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    const { pid, color } = req.params
+    const user = await User.findById(_id).select('cart')
+    const alreadyProduct = user?.cart?.find(element => element.product.toString() === pid &&
+        element.color.toLowerCase() === color.toLowerCase())
+    if (!alreadyProduct) {
+        return res.status(401).json({
+            success: false,
+            mes: 'Cart not found'
+        })
+    }
+    const response = await User.findByIdAndUpdate(
+        _id,
+        { $pull: { cart: { product: pid, color } } },
+        { new: true }
+    )
+    return res.status(200).json({
+        success: response ? true : false,
+        mes: response ? 'Product removed from cart' : 'Something went wrong'
+    })
 })
 
 module.exports = {
@@ -366,6 +395,7 @@ module.exports = {
     updateUser,
     updateUserByAdmin,
     updateUserAddress,
-    updateCart,
+    updateProductCart,
     finalRegister,
+    removeProductInCart,
 }

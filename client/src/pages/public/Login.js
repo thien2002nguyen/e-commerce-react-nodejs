@@ -3,7 +3,7 @@ import background from 'assets/ecommerce-login.png'
 import { InputField, Button, Loading } from 'components';
 import { apiLogin, apiRegister, apiForgotPassword } from 'apis';
 import Swal from 'sweetalert2'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import path from 'ultils/path';
 import { login } from 'store/user/userSlice'
 import { useDispatch } from 'react-redux';
@@ -33,6 +33,7 @@ const Login = () => {
             phone: ''
         })
     }
+    const [searchParams] = useSearchParams()
     const [isRegister, setIsRegister] = useState(false)
     const [isForgotPassword, setIsForgotPassword] = useState(false)
     const [email, setEmail] = useState('')
@@ -63,14 +64,14 @@ const Login = () => {
                     setIsRegister(false)
                     resetPayload()
                     dispath(login({ isLoggedIn: true, token: response.accessToken }))
-                    navigate(`/${path.HOME}`)
+                    searchParams.get('redirect') ? navigate(searchParams.get('redirect')) : navigate(`/${path.HOME}`)
                 }
                 else {
                     Swal.fire('Oops!', response?.data?.mes, 'error')
                 }
             }
         }
-    }, [payload, isRegister, navigate, dispath])
+    }, [payload, isRegister, navigate, dispath, searchParams])
     const handleForgotPassword = async () => {
         dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
         const response = await apiForgotPassword({ email })
