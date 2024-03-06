@@ -8,7 +8,8 @@ export const userSlice = createSlice({
         current: null,
         token: null,
         isLoading: false,
-        errorMessage: ''
+        errorMessage: '',
+        currentCart: []
     },
     reducers: {
         login: (state, action) => {
@@ -23,6 +24,18 @@ export const userSlice = createSlice({
         },
         clearErrorMessage: (state) => {
             state.errorMessage = ''
+        },
+        updateCart: (state, action) => {
+            const { pid, color, quantity } = action.payload
+            const updatingCart = JSON.parse(JSON.stringify(state.currentCart))
+            state.currentCart = updatingCart?.map(element => {
+                if (element.product?._id === pid && element.color === color) {
+                    return { ...element, quantity }
+                }
+                else {
+                    return element
+                }
+            })
         }
     },
     // Code logic xử lý async action
@@ -34,7 +47,8 @@ export const userSlice = createSlice({
         builder.addCase(actions.getCurrent.fulfilled, (state, action) => {
             state.isLoading = false;
             state.current = action.payload;
-            state.isLoggedIn = true
+            state.currentCart = action.payload.cart;
+            state.isLoggedIn = true;
         });
 
         builder.addCase(actions.getCurrent.rejected, (state, action) => {
@@ -47,6 +61,6 @@ export const userSlice = createSlice({
     },
 })
 
-export const { login, logout, clearErrorMessage } = userSlice.actions
+export const { login, logout, clearErrorMessage, updateCart } = userSlice.actions
 
 export default userSlice.reducer

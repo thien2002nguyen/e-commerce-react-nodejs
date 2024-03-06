@@ -46,7 +46,9 @@ const Cart = ({ dispatch, navigate }) => {
                             <div className='flex gap-2'>
                                 <img src={element.thumb} alt="thumb" className='w-16 h-16 object-cover' />
                                 <div className='flex flex-col gap-2'>
-                                    <span className='text-sm capitalize'>{element.title?.toLowerCase()}</span>
+                                    <span className='text-sm capitalize'>{element.title.length > 7 ?
+                                        element.title.slice(0, 10).toLowerCase() + '...' :
+                                        element.title.toLowerCase()}</span>
                                     <div className='flex flex-col text-gray-300 gap-1'>
                                         <span className='text-[10px] capitalize'>{element.color?.toLowerCase()}</span>
                                         <span className='text-xs'>

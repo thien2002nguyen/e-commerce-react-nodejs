@@ -14,6 +14,7 @@ import { getCurrent } from 'store/user/asyncActions';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import path from 'ultils/path';
+import { createSearchParams } from 'react-router-dom';
 
 const {
     AiFillEye,
@@ -22,7 +23,7 @@ const {
     BsFillCartCheckFill
 } = icons
 
-const Product = ({ productData, isNew, normal, px, showDescription, navigate, dispatch }) => {
+const Product = ({ productData, isNew, normal, px, showDescription, navigate, dispatch, location }) => {
     const [isShowOption, setIsShowOption] = useState()
     const [isShow, setIsShow] = useState(false)
     const { current } = useSelector(state => state.user)
@@ -37,9 +38,13 @@ const Product = ({ productData, isNew, normal, px, showDescription, navigate, di
                     cancelButtonText: 'Not now',
                     showCancelButton: true,
                     confirmButtonText: 'Go login'
+
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        navigate(`/${path.LOGIN}`)
+                        navigate({
+                            pathname: `/${path.LOGIN}`,
+                            search: createSearchParams({ redirect: location.pathname }).toString()
+                        })
                     }
                 })
             }

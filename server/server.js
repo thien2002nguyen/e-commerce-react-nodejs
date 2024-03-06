@@ -1,3 +1,4 @@
+/* The project was written by Nguyen Canh Thien */
 const express = require('express')
 require('dotenv').config()
 const dbConnect = require('./config/dbconnect')

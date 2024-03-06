@@ -12,6 +12,7 @@ import {
   FinalRegister,
   ResetPassword,
   DetailCart,
+  Checkout,
 } from './pages/public'
 import {
   AdminLayout,
@@ -43,6 +44,7 @@ function App() {
   }, [dispatch])
   return (
     <div className="min-h-screen font-main relative">
+      {/* The project was written by Nguyen Canh Thien */}
       {isShowModal && <Modal>{modalChildren}</Modal>}
       <Routes>
         <Route path={path.PUBLIC} element={<Public />}>
@@ -71,6 +73,7 @@ function App() {
         <Route path={path.LOGIN} element={<Login />} />
         <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />
         <Route path={path.RESET_PASSWORD} element={<ResetPassword />} />
+        <Route path={path.CHECKOUT} element={<Checkout />} />
       </Routes>
       <ToastContainer
         position="top-right"

@@ -90,7 +90,6 @@ const Products = () => {
                             activedClick={activedClick}
                             changeActiveFitler={changeActiveFitler}
                             type='input'
-
                         />
                         <SearchItem
                             name='color'

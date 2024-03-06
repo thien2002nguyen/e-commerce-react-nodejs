@@ -382,6 +382,19 @@ const removeProductInCart = asyncHandler(async (req, res) => {
     })
 })
 
+const updateCart = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    const { cart } = req.body
+    if (!_id || !cart) {
+        throw new Error('Missing inputs')
+    }
+    const response = await User.findByIdAndUpdate(_id, { cart: cart }, { new: true })
+    return res.status(200).json({
+        success: response ? true : false,
+        mes: response ? 'Updated cart' : 'Something went wrong'
+    })
+})
+
 module.exports = {
     register,
     login,
@@ -398,4 +411,5 @@ module.exports = {
     updateProductCart,
     finalRegister,
     removeProductInCart,
+    updateCart,
 }
