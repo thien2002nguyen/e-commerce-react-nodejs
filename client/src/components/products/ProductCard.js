@@ -8,7 +8,7 @@ const ProductCard = ({ price, totalRatings, title, image }) => {
             <div className='flex flex-col gap-1 mt-[15px] items-start w-full text-xs'>
                 <span className='line-clamp-1 capitalize'>{title?.toLowerCase()}</span>
                 <span className='flex h-4'>{renderStartFromNumber(totalRatings)}</span>
-                <span>{`${formatMoney(price)} VNĐ`}</span>
+                <span>{`${formatMoney(price)} $`}</span>
             </div>
         </div>
     );

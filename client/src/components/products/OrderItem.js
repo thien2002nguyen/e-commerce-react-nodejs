@@ -58,7 +58,7 @@ const OrderItem = ({ element, dispatch }) => {
             </div>
             <div className='col-span-3 text-end p-4 w-full flex justify-end items-center'>
                 <span className='text-[18px] font-semibold'>
-                    {`${formatMoney(element.price * quantity || 0)} VNĐ`}
+                    {`${formatMoney(element.price * quantity || 0)} $`}
                 </span>
             </div>
         </div>

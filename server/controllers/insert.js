@@ -12,7 +12,7 @@ const fn = async (product) => {
         description: product?.description,
         brand: product?.brand,
         thumb: product?.thumb,
-        price: Math.round(Number(product?.price?.match(/\d/g).join('')) / 100),
+        price: Math.round(Number(product?.price?.match(/\d/g).join('')) / 100 / 23500),
         category: product?.category[1],
         quantity: Math.round(Math.random() * 100),
         sold: Math.round(Math.random() * 100),

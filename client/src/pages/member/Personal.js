@@ -26,6 +26,7 @@ const Personal = () => {
             lastname: current?.lastname || '',
             email: current?.email || '',
             phone: current?.phone || '',
+            address: current?.address || '',
         })
         setPreview({
             avatar: current?.avatar || null
@@ -134,6 +135,16 @@ const Personal = () => {
                         }}
                         fullWidth
                         placeholder='Enter phone number'
+                        styleInput='px-4 py-2'
+                        styleDiv='flex-auto h-24 mt-2'
+                    />
+                    <InputForm
+                        label='Your adrress'
+                        register={register}
+                        errors={errors}
+                        id='address'
+                        fullWidth
+                        placeholder='Enter your address'
                         styleInput='px-4 py-2'
                         styleDiv='flex-auto h-24 mt-2'
                     />

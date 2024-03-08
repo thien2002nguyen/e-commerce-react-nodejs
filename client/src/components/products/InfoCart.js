@@ -43,7 +43,7 @@ const InfoCart = ({ dispatch, navigate }) => {
                     <span className='text-sm text-gray-600'>Subtotal</span>
                     <span className='text-[18px] font-semibold'>
                         {`${formatMoney(currentCart?.reduce((sum, elment) =>
-                            sum + Number(elment.price * elment.quantity), 0) || 0)} VNĐ`}
+                            sum + Number(elment.price * elment.quantity), 0) || 0)} $`}
                     </span>
                 </div>
                 <span className='text-sm text-gray-600'>Shipping, taxes, and discounts calculated at checkout</span>

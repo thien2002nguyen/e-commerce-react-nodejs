@@ -133,7 +133,7 @@ const QuickView = ({ productData, dispatch, location, navigate }) => {
                     >
                     </div>}
                     <div className='flex items-center justify-between'>
-                        <h2 className='text-xl font-semibold'>{`${formatMoney(productData?.price)} VNĐ`}</h2>
+                        <h2 className='text-xl font-semibold'>{`${formatMoney(productData?.price)} $`}</h2>
                         <span className='text-sm text-main'>{`In stock: ${productData?.quantity}`}</span>
                     </div>
                     <div className='my-4 flex gap-4'>
@@ -146,7 +146,7 @@ const QuickView = ({ productData, dispatch, location, navigate }) => {
                                 <img src={productData?.thumb} alt="thumb" className='w-8 h-8 rounded-md object-contain' />
                                 <span className='flex flex-col'>
                                     <span className='text-sm'>{productData?.color}</span>
-                                    <span className='text-xs'>{`${formatMoney(productData?.price)} VNĐ`}</span>
+                                    <span className='text-xs'>{`${formatMoney(productData?.price)} $`}</span>
                                 </span>
                             </div>
                             {productData?.variants?.map((element, index) => (
@@ -159,7 +159,7 @@ const QuickView = ({ productData, dispatch, location, navigate }) => {
                                     <img src={element?.thumb} alt="thumb" className='w-8 h-8 rounded-md object-contain' />
                                     <span className='flex flex-col'>
                                         <span className='text-sm'>{element?.color}</span>
-                                        <span className='text-xs'>{`${formatMoney(element?.price)} VNĐ`}</span>
+                                        <span className='text-xs'>{`${formatMoney(element?.price)} $`}</span>
                                     </span>
                                 </div>
                             ))}

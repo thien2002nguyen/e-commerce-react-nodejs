@@ -91,7 +91,7 @@ const Product = ({ productData, isNew, normal, px, showDescription, navigate, di
                         flex-col gap-2 z-10 bg-white animate-fade-in'>
                         <div className='flex justify-between w-full border-b px-4 pt-1 pb-2'>
                             <span className='min-h-12'>{productData?.title}</span>
-                            <span className='min-h-12'>{`${formatMoney(productData?.price) || 0} VNĐ`}</span>
+                            <span className='min-h-12'>{`${formatMoney(productData?.price) || 0} $`}</span>
                         </div>
                         {productData?.description?.length > 1 && <ul className='text-xs text-gray-500 leading-2 list-square pl-8 pr-4 py-2'>
                             {productData?.description?.map((element, index) => (
@@ -137,7 +137,7 @@ const Product = ({ productData, isNew, normal, px, showDescription, navigate, di
                 <div className='flex flex-col gap-1 mt-[15px] items-start w-full'>
                     <span className='flex h-4'>{renderStartFromNumber(productData?.totalRatings)}</span>
                     <span className='line-clamp-1 capitalize'>{productData?.title?.toLowerCase()}</span>
-                    <span>{`${formatMoney(productData?.price)} VNĐ`}</span>
+                    <span>{`${formatMoney(productData?.price)} $`}</span>
                 </div>
             </div>
         </div>

@@ -133,7 +133,7 @@ const ManageProducts = () => {
                                     }</td>
                                     <td className='p-2'>{element.brand.length > 7 ? element.brand.slice(0, 7) + '...' : element.brand}</td>
                                     <td className='p-2'>{element.category.length > 7 ? element.category.slice(0, 7) + '...' : element.category}</td>
-                                    <td className='p-2'>{`${formatMoney(element.price)} VNĐ`}</td>
+                                    <td className='p-2'>{`${formatMoney(element.price)} $`}</td>
                                     <td className='p-2'>{element.quantity}</td>
                                     <td className='p-2'>{element.sold}</td>
                                     <td className='p-2 uppercase'>{element.color.length > 6 ? element.color.slice(0, 6) + '...' : element.color}</td>

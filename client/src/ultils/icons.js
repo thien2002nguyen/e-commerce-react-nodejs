@@ -8,11 +8,11 @@ import {
     MdOutlineTransitEnterexit,
     MdOutlineExitToApp,
     MdBroadcastOnPersonal,
-    MdHistory
+    MdHistory,
 } from 'react-icons/md';
 import { BsHandbagFill, BsShieldShaded, BsCartPlus, BsFillCartCheckFill } from 'react-icons/bs';
 import { FaUserCircle, FaTty, FaEdit, FaUpload, FaShoppingCart } from 'react-icons/fa';
-import { FaArrowRightLong } from "react-icons/fa6";
+import { FaArrowRightLong, FaArrowLeftLong } from "react-icons/fa6";
 import { TbFileLike } from "react-icons/tb";
 import {
     AiFillHome,
@@ -30,6 +30,7 @@ import { BiDotsHorizontalRounded, BiCustomize } from "react-icons/bi";
 import { LiaLayerGroupSolid } from "react-icons/lia";
 import { GrDocumentUpdate } from "react-icons/gr";
 import { ImExit, ImBin } from "react-icons/im";
+import { HiOutlineShoppingBag } from "react-icons/hi2";
 
 const icons = {
     RiPhoneFill,
@@ -77,6 +78,8 @@ const icons = {
     BsFillCartCheckFill,
     FaArrowRightLong,
     ImBin,
+    HiOutlineShoppingBag,
+    FaArrowLeftLong,
 }
 
 export default icons

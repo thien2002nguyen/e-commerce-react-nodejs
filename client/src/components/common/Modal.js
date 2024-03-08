@@ -14,7 +14,7 @@ const Modal = ({ children }) => {
     return (
         <div
             onClick={() => dispatch(showModal({ isShowModal: false, modalChildren: null }))}
-            className='fixed z-50 inset-0 bg-opacity-75 bg-black'
+            className='fixed z-[1000] inset-0 bg-opacity-75 bg-black'
         >
             {children}
         </div>

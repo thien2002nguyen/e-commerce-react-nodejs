@@ -285,11 +285,11 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const { firstname, lastname, email, phone } = req.body
+    const { firstname, lastname, email, phone, address } = req.body
     if (!_id || !firstname || !lastname || !email || !phone) {
         throw new Error('Missing inputs')
     }
-    const data = { firstname, lastname, email, phone }
+    const data = { firstname, lastname, email, phone, address }
     if (req.file) {
         data.avatar = req.file.path
     }
@@ -314,14 +314,14 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
 
 const updateUserAddress = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    if (!req.body.address) {
+    const { address } = req.body
+    if (!address) {
         throw new Error('Missing inputs')
     }
-    const response = await User.findByIdAndUpdate(_id,
-        { $push: { address: req.body.address } }, { new: true }).select('-refreshToken -password -role')
+    const response = await User.findByIdAndUpdate(_id, { address: address }, { new: true })
     return res.status(200).json({
         success: response ? true : false,
-        updatedUser: response ? response : 'Something went wrong'
+        mes: response ? 'Updated address' : 'Something went wrong'
     })
 })
 

@@ -40,7 +40,7 @@ const Products = () => {
         delete queries.from
         delete queries.to
         const query = { ...priceQuery, ...queries }
-        if (category?.toLowerCase() !== ':category') {
+        if (category !== 'products') {
             query.category = category
         }
         fetchProductsByCategory(query)
@@ -74,9 +74,9 @@ const Products = () => {
             <div className='h-[81px] bg-gray-100 w-full flex justify-center items-center'>
                 <div className='w-main'>
                     <h3 className='font-semibold uppercase text-[18px] mb-2'>
-                        {category === ':category' ? 'products' : category}
+                        {category}
                     </h3>
-                    <Breadcrumb category={category === ':category' ? 'Products' : category} />
+                    <Breadcrumb category={category} />
                 </div>
             </div>
             <div className='w-main border p-3 flex justify-between mt-8 mx-auto'>
@@ -84,7 +84,7 @@ const Products = () => {
                     <span className='font-semibold text-sm text-gray-800'>
                         Filter by
                     </span>
-                    <div className='flex items-center gap-4'>
+                    <div className='flex items-center gap-4 z-50'>
                         <SearchItem
                             name='price'
                             activedClick={activedClick}
@@ -100,7 +100,7 @@ const Products = () => {
                 </div>
                 <div className='flex flex-col w-2/7'>
                     <span className='font-semibold text-sm text-gray-800'>Sort by</span>
-                    <div className='w-full mt-2'>
+                    <div className='w-full mt-2 z-50'>
                         <InputSelect value={sort} options={sorts} changeValue={changeValue} />
                     </div>
                 </div>
