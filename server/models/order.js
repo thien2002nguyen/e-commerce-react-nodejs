@@ -13,7 +13,7 @@ var orderSchema = new mongoose.Schema({
     status: {
         type: String,
         default: 'Processing',
-        enum: ['Cancelled', 'Processing', 'Successed'],
+        enum: ['Cancelled', 'Processing', 'Shipping', 'Successed'],
     },
     total: {
         type: Number,
@@ -29,6 +29,8 @@ var orderSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User',
     },
+}, {
+    timestamps: true,
 });
 
 //Export the model

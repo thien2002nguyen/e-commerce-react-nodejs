@@ -235,26 +235,28 @@ const ManageUser = () => {
                                             /> : <span>{element.isBlocked ? 'Blocked' : 'Active'}</span>
                                     }</td>
                                     <td className='p-2'>{moment(element.createdAt).format('DD/MM/YYYY')}</td>
-                                    <td className='p-2 flex gap-2'>
-                                        {editElement?._id === element?._id ? <Button
-                                            handleOnClick={() => setEditElement(null)}
-                                            bg='bg-gray-600'
-                                            hover='hover:bg-gray-500'
-                                        >
-                                            <MdOutlineTransitEnterexit />
-                                        </Button> :
-                                            <Button
-                                                handleOnClick={() => setEditElement(element)}
-                                                bg='bg-yellow-600'
-                                                hover='hover:bg-yellow-500'
+                                    <td className='p-2'>
+                                        <div className='flex gap-2'>
+                                            {editElement?._id === element?._id ? <Button
+                                                handleOnClick={() => setEditElement(null)}
+                                                bg='bg-gray-600'
+                                                hover='hover:bg-gray-500'
                                             >
-                                                <FaEdit />
-                                            </Button>}
-                                        <Button
-                                            handleOnClick={() => handleDeleteUser(element._id)}
-                                        >
-                                            <RiDeleteBin5Fill />
-                                        </Button>
+                                                <MdOutlineTransitEnterexit />
+                                            </Button> :
+                                                <Button
+                                                    handleOnClick={() => setEditElement(element)}
+                                                    bg='bg-yellow-600'
+                                                    hover='hover:bg-yellow-500'
+                                                >
+                                                    <FaEdit />
+                                                </Button>}
+                                            <Button
+                                                handleOnClick={() => handleDeleteUser(element._id)}
+                                            >
+                                                <RiDeleteBin5Fill />
+                                            </Button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

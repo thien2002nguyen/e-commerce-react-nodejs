@@ -29,6 +29,7 @@ const makeToken = require('uniqid')
 //         })
 //     }
 // })
+
 const register = asyncHandler(async (req, res) => {
     const { email, password, firstname, lastname, phone } = req.body
     // kiểm tra dữ liệu truyền lên
@@ -123,7 +124,7 @@ const getCurrent = asyncHandler(async (req, res) => {
             path: 'product',
             select: 'quantity'
         }
-    })
+    }).populate('wishlist', 'title thumb price color description')
     return res.status(200).json({
         success: user ? true : false,
         rs: user ? user : 'User not found'
@@ -395,6 +396,27 @@ const updateCart = asyncHandler(async (req, res) => {
     })
 })
 
+const updateWishlist = asyncHandler(async (req, res) => {
+    const { pid } = req.params
+    const { _id } = req.user
+    const user = await User.findById(_id)
+    const alreadyInWishlist = user.wishlist?.find(element => element.toString() === pid)
+    if (alreadyInWishlist) {
+        const response = await User.findByIdAndUpdate(_id, { $pull: { wishlist: pid } }, { new: true })
+        return res.status(200).json({
+            success: response ? true : false,
+            mes: response ? 'Removed product from wishlist' : 'Failed to update wishlist'
+        })
+    }
+    else {
+        const response = await User.findByIdAndUpdate(_id, { $push: { wishlist: pid } }, { new: true })
+        return res.status(200).json({
+            success: response ? true : false,
+            mes: response ? 'Add product to wishlist' : 'Failed to update wishlist'
+        })
+    }
+})
+
 module.exports = {
     register,
     login,
@@ -412,4 +434,5 @@ module.exports = {
     finalRegister,
     removeProductInCart,
     updateCart,
+    updateWishlist,
 }

@@ -58,7 +58,7 @@ const Cart = ({ dispatch, navigate }) => {
                             </div>
                             <div className='flex flex-col items-end gap-1'>
                                 <div className='text-sm'>
-                                    {`${formatMoney(element.price * (element.quantity || 1))} $`}
+                                    {`$${formatMoney(element.price * (element.quantity || 1))} USD`}
                                 </div>
                                 <div
                                     className='h-10 duration-200 cursor-pointer rounded-full w-10 
@@ -76,8 +76,8 @@ const Cart = ({ dispatch, navigate }) => {
                     <div className='flex items-center justify-between'>
                         <span className='uppercase font-semibold'>Subtotal</span>
                         <span className='font-semibold'>
-                            {`${formatMoney(current?.cart?.reduce((sum, element) =>
-                                sum + Number(element.price) * (element.quantity || 1), 0) || 0)} $`}
+                            {`$${formatMoney(current?.cart?.reduce((sum, element) =>
+                                sum + Number(element.price) * (element.quantity || 1), 0) || 0)} USD`}
                         </span>
                     </div>
                     <span className='text-sm mt-2 text-gray-400 text-center block'>

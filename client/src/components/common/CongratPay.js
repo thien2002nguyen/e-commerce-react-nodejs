@@ -17,7 +17,7 @@ const CongratPay = ({ navigate, dispatch }) => {
             <div className='absolute w-screen h-screen inset-0 z-20 flex justify-center items-center'>
                 <div className='bg-white p-4 rounded-md flex flex-col gap-6'>
                     <div className='flex flex-col items-center gap-6'>
-                        <span className='text-2xl text-gray-600'>Payment success</span>
+                        <span className='text-2xl text-gray-600 font-medium'>Payment Success</span>
                         <img src={paymentSuccess} alt="paymentSuccess" className='w-48 h-48' />
                     </div>
                     <Button
@@ -25,6 +25,8 @@ const CongratPay = ({ navigate, dispatch }) => {
                             navigate(`/${path.PRODUCTS}`)
                             dispatch(showModal({ isShowModal: false, modalChildren: null }))
                         }}
+                        bg='bg-green-600'
+                        hover='hover:bg-green-500'
                         customStyle='flex items-center gap-2'
                     >
                         <span>Continue shopping now</span>

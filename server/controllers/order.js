@@ -5,13 +5,16 @@ const asyncHandler = require('express-async-handler')
 
 const createOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const { coupon, products, total, address } = req.body
+    const { coupon, products, total, address, status } = req.body
     const createData = { products, total, orderBy: _id, address }
     if (coupon) {
         const selectedCoupon = await Coupon.findById(coupon)
         if (selectedCoupon) {
             createData.coupon = coupon
         }
+    }
+    if (status) {
+        createData.status = status
     }
     const response = await Order.create(createData)
     return res.status(200).json({
@@ -29,30 +32,82 @@ const updateStatus = asyncHandler(async (req, res) => {
     const response = await Order.findByIdAndUpdate(oid, { status }, { new: true })
     return res.status(200).json({
         success: response ? true : false,
-        updatedStatus: response ? response : 'Can not update status'
+        mes: response ? 'Updated' : 'Can not update status'
     })
 })
 
-const getUserOrder = asyncHandler(async (req, res) => {
+const getUserOrders = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const response = await Order.find({ orderBy: _id })
-    return res.status(200).json({
-        success: response ? true : false,
-        updatedStatus: response ? response : 'Something went wrong'
-    })
+    const queries = { ...req.query }
+    const excludeFields = ['limit', 'sort', 'page', 'fields']
+    excludeFields.forEach(element => delete queries[element])
+    let queryString = JSON.stringify(queries);
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchElement => `$${matchElement}`)
+    const formatedQueries = JSON.parse(queryString)
+    const allQuery = { ...formatedQueries, orderBy: _id }
+    let queryCommand = Order.find(allQuery)
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ')
+        queryCommand = queryCommand.sort(sortBy)
+    }
+    if (req.query.fields) {
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    }
+    const page = +req.query.page || 1
+    const limit = +req.query.limit || process.env.LIMIT_ORDER
+    const skip = (page - 1) * limit
+    queryCommand.skip(skip).limit(limit)
+    try {
+        const response = await queryCommand.exec()
+        const counts = await Order.find(allQuery).countDocuments()
+        return res.status(200).json({
+            success: response ? true : false,
+            counts,
+            data: response ? response : 'Can not get orders',
+        });
+    } catch {
+        throw new Error('Something went wrong')
+    }
 })
 
 const getOrders = asyncHandler(async (req, res) => {
-    const response = await Order.find()
-    return res.status(200).json({
-        success: response ? true : false,
-        updatedStatus: response ? response : 'Something went wrong'
-    })
+    const queries = { ...req.query }
+    const excludeFields = ['limit', 'sort', 'page', 'fields']
+    excludeFields.forEach(element => delete queries[element])
+    let queryString = JSON.stringify(queries);
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchElement => `$${matchElement}`)
+    const formatedQueries = JSON.parse(queryString)
+    const allQuery = { formatedQueries }
+    let queryCommand = Order.find(allQuery)
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ')
+        queryCommand = queryCommand.sort(sortBy)
+    }
+    if (req.query.fields) {
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    }
+    const page = +req.query.page || 10
+    const limit = +req.query.limit || process.env.LIMIT_ORDER
+    const skip = (page - 1) * limit
+    queryCommand.skip(skip).limit(limit)
+    try {
+        const response = await queryCommand.exec()
+        const counts = await Order.find(allQuery).countDocuments()
+        return res.status(200).json({
+            success: response ? true : false,
+            counts,
+            data: response ? response : 'Can not get orders',
+        });
+    } catch {
+        throw new Error('Something went wrong')
+    }
 })
 
 module.exports = {
     createOrder,
     updateStatus,
-    getUserOrder,
+    getUserOrders,
     getOrders,
 }

@@ -1,41 +1,49 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import icons from 'ultils/icons'
 import { apiGetProducts } from 'apis/products'
 import { renderStartFromNumber, formatMoney, secondsToHsm } from 'ultils/helpers';
 import { CountDown } from 'components'
 import moment from 'moment'
 import withBaseComponent from 'hocs/withBaseComponent';
+import { useSelector } from 'react-redux';
+import { getDealDaily } from 'store/products/productSlice';
 
 const { AiFillStar, MdMenu } = icons
 let idInterval
 
-const DealDaily = ({ navigate }) => {
-    const [dealDaily, setDealDaily] = useState()
+const DealDaily = ({ navigate, dispatch }) => {
+    const { dealDaily } = useSelector(state => state.products)
     const [hour, setHour] = useState(0)
     const [minute, setMinute] = useState(0)
     const [second, setSecond] = useState(0)
     const [expireTime, setExpireTime] = useState(false)
-    const fetchDealDaily = async () => {
+    const fetchDealDaily = useCallback(async () => {
         const response = await apiGetProducts({ limit: 1, page: Math.round(Math.random() * 7), sort: '-totalRatings' })
         if (response.success) {
-            setDealDaily(response.products[0])
-            const today = `${moment().format('MM/DD/YYYY')} 0:00:00`
-            const seconds = new Date(today).getTime() - new Date().getTime() + 24 * 3600 * 1000
-            const number = secondsToHsm(seconds)
+            const today = Date.now()
+            const newTime = new Date(today)
+            const resetHours = newTime.setHours(0, 0, 0, 0)
+            dispatch(getDealDaily({ data: response.products[0], time: resetHours + 24 * 3600 * 1000 }))
+        }
+    }, [dispatch])
+    useEffect(() => {
+        if (dealDaily?.time) {
+            const time = dealDaily.time - Date.now()
+            const number = secondsToHsm(time)
             setHour(number.h)
             setMinute(number.m)
             setSecond(number.s)
         }
-        else {
-            setHour(0)
-            setMinute(59)
-            setSecond(59)
-        }
-    }
+    }, [dealDaily])
     useEffect(() => {
         idInterval && clearInterval(idInterval)
-        fetchDealDaily()
-    }, [expireTime])
+        const fetchData = async () => {
+            await fetchDealDaily()
+        }
+        if (moment(dealDaily?.time).isBefore(moment())) {
+            fetchData()
+        }
+    }, [expireTime, fetchDealDaily, dealDaily])
     useEffect(() => {
         idInterval = setInterval(() => {
             if (second > 0) {
@@ -75,16 +83,16 @@ const DealDaily = ({ navigate }) => {
             </div>
             <div className='w-full flex flex-col items-center pt-8 px-4 gap-2'>
                 <img
-                    src={dealDaily?.thumb ||
+                    src={dealDaily?.data?.thumb ||
                         'https://nayemdevs.com/wp-content/uploads/2020/03/default-product-image.png'}
                     alt=""
                     className='w-full object-contain'
                 />
                 <span className='line-clamp-1 capitalize'>
-                    {dealDaily?.title?.toLowerCase() || 'product coming soon'}
+                    {dealDaily?.data?.title?.toLowerCase() || 'product coming soon'}
                 </span>
-                <span className='flex h-4'>{renderStartFromNumber(dealDaily?.totalRatings, 20)}</span>
-                <span className='h-4'>{dealDaily?.price && `${formatMoney(dealDaily?.price)} $`}</span>
+                <span className='flex h-4'>{renderStartFromNumber(dealDaily?.data?.totalRatings, 20)}</span>
+                <span className='h-4'>{dealDaily?.data?.price && `$${formatMoney(dealDaily?.data?.price)} USD`}</span>
             </div>
             <div className='px-4 mt-8'>
                 <div className='flex justify-center gap-2 items-center mb-4'>
@@ -96,7 +104,7 @@ const DealDaily = ({ navigate }) => {
                     type='button'
                     className='flex gap-2 justify-center items-center w-full bg-main
                         hover:bg-gray-800 text-white font-medium py-2 duration-200'
-                    onClick={() => navigate(`/${dealDaily?.category?.toLowerCase()}/${dealDaily._id}/${dealDaily.title}`)}
+                    onClick={() => navigate(`/${dealDaily?.data?.category?.toLowerCase()}/${dealDaily?.data._id}/${dealDaily?.data.title}`)}
                 >
                     <MdMenu />
                     <span>Options</span>

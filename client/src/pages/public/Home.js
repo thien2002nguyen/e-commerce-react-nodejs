@@ -3,12 +3,14 @@ import { Sidebar, Banner, BestSeller, DealDaily, FeatureProducts, CustomSlider }
 import { useSelector } from 'react-redux';
 import icons from '../../ultils/icons';
 import defaultProduct from 'assets/default-product-image.png'
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 const { IoIosArrowForward } = icons
 
 const Home = () => {
     const { newProducts } = useSelector(state => state.products)
     const { categories } = useSelector(state => state.app)
+    const navigate = useNavigate()
     return (
         <div className='w-main mx-auto'>
             <div className='w-full flex mt-4'>
@@ -45,8 +47,18 @@ const Home = () => {
                                 <h4 className='font-semibold uppercase text-gray-700'>{element.title}</h4>
                                 <ul className='text-sm'>
                                     {element.brand?.map((item, index) => (
-                                        <li key={index} className='flex gap-2 justify-start items-center
-                                            text-gray-500 hover:text-red-600 duration-150 cursor-pointer'>
+                                        <li
+                                            key={index}
+                                            className='flex gap-2 justify-start items-center
+                                            text-gray-500 hover:text-red-600 duration-150 cursor-pointer'
+                                            onClick={() => {
+                                                navigate({
+                                                    pathname: `/${element.title}`,
+                                                    search: createSearchParams({ brand: item }).toString()
+                                                })
+                                                window.scrollTo(0, 0);
+                                            }}
+                                        >
                                             <IoIosArrowForward />
                                             <span>{item}</span>
                                         </li>

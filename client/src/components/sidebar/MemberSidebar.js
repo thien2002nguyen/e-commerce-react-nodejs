@@ -20,7 +20,6 @@ const MemberSidebar = () => {
             setActived(prev => [...prev, tabID])
         }
     }
-    console.log(current?.avatar);
     return (
         <div className='bg-white h-full py-4'>
             <div className='flex flex-col justify-center items-center gap-2 py-4'>

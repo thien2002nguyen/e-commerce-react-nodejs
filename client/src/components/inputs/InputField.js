@@ -39,10 +39,12 @@ const InputField = ({
                 onBlur={() => setIsFocus(false)}
                 onKeyDown={e => e.code.toLocaleLowerCase() === 'enter' && handleSubmit()}
             />
-            {invalidFields?.some(element => element.name === nameKey) && <small
-                className='text-main text-[10px]'>
-                {invalidFields?.find(element => element.name === nameKey)?.mes}
-            </small>}
+            <div className='h-4'>
+                {invalidFields?.some(element => element.name === nameKey) && <small
+                    className='text-main text-[10px]'>
+                    {invalidFields?.find(element => element.name === nameKey)?.mes}
+                </small>}
+            </div>
         </div>
     );
 };

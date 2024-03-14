@@ -5,3 +5,9 @@ export const apiCreateOrder = (data) => axios({
     method: 'post',
     data,
 })
+
+export const apiGetUserOrders = (params) => axios({
+    url: '/order',
+    method: 'get',
+    params
+})

@@ -123,43 +123,53 @@ const ManageProducts = () => {
                         </thead>
                         <tbody>
                             {products?.map((element, index) => (
-                                <tr key={index} className='border border-blue-500'>
-                                    <td className='p-2'>{((params.get('page') || 1) - 1) * process.env.REACT_APP_LIMIT + index + 1}</td>
+                                <tr key={index} className='border border-blue-600'>
+                                    <td className='p-2'>
+                                        {((params.get('page') || 1) - 1) * process.env.REACT_APP_LIMIT + index + 1}
+                                    </td>
                                     <td className='p-2'>
                                         <img src={element.thumb} alt="thumb" className='w-[50px] h-[50px] object-contain' />
                                     </td>
                                     <td className='p-2'>{
                                         element.title.length > 7 ? element.title.slice(0, 7) + '...' : element.title
                                     }</td>
-                                    <td className='p-2'>{element.brand.length > 7 ? element.brand.slice(0, 7) + '...' : element.brand}</td>
-                                    <td className='p-2'>{element.category.length > 7 ? element.category.slice(0, 7) + '...' : element.category}</td>
-                                    <td className='p-2'>{`${formatMoney(element.price)} $`}</td>
+                                    <td className='p-2'>
+                                        {element.brand.length > 7 ? element.brand.slice(0, 7) + '...' : element.brand}
+                                    </td>
+                                    <td className='p-2'>
+                                        {element.category.length > 7 ? element.category.slice(0, 7) + '...' : element.category}
+                                    </td>
+                                    <td className='p-2'>{`$${formatMoney(element.price)} USD`}</td>
                                     <td className='p-2'>{element.quantity}</td>
                                     <td className='p-2'>{element.sold}</td>
-                                    <td className='p-2 uppercase'>{element.color.length > 6 ? element.color.slice(0, 6) + '...' : element.color}</td>
+                                    <td className='p-2 uppercase'>
+                                        {element.color.length > 6 ? element.color.slice(0, 6) + '...' : element.color}
+                                    </td>
                                     <td className='p-2'>{element.totalRatings}</td>
                                     <td className='p-2'>{element.variants.length || 0}</td>
                                     <td className='p-2'>{moment(element.createdAt).format('DD/MM/YYYY')}</td>
-                                    <td className='p-2 flex gap-2'>
-                                        <Button
-                                            bg='bg-green-600'
-                                            hover='hover:bg-green-500'
-                                            handleOnClick={() => setEditProduct(element)}
-                                        >
-                                            <FaEdit />
-                                        </Button>
-                                        <Button
-                                            handleOnClick={() => handleDeleteUser(element._id)}
-                                        >
-                                            <RiDeleteBin5Fill />
-                                        </Button>
-                                        <Button
-                                            bg='bg-yellow-600'
-                                            hover='hover:bg-yellow-500'
-                                            handleOnClick={() => setCustomizeVariants(element)}
-                                        >
-                                            <BiCustomize />
-                                        </Button>
+                                    <td className='p-2'>
+                                        <div className='flex gap-2'>
+                                            <Button
+                                                bg='bg-green-600'
+                                                hover='hover:bg-green-500'
+                                                handleOnClick={() => setEditProduct(element)}
+                                            >
+                                                <FaEdit />
+                                            </Button>
+                                            <Button
+                                                handleOnClick={() => handleDeleteUser(element._id)}
+                                            >
+                                                <RiDeleteBin5Fill />
+                                            </Button>
+                                            <Button
+                                                bg='bg-yellow-600'
+                                                hover='hover:bg-yellow-500'
+                                                handleOnClick={() => setCustomizeVariants(element)}
+                                            >
+                                                <BiCustomize />
+                                            </Button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

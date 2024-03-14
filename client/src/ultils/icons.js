@@ -1,4 +1,4 @@
-import { RiPhoneFill, RiTruckFill, RiBillLine, RiDeleteBin5Fill, RiAdminLine } from 'react-icons/ri';
+import { RiPhoneFill, RiTruckFill, RiBillLine, RiDeleteBin5Fill, RiAdminLine, RiSubtractFill } from 'react-icons/ri';
 import {
     MdEmail,
     MdMenu,
@@ -10,9 +10,9 @@ import {
     MdBroadcastOnPersonal,
     MdHistory,
 } from 'react-icons/md';
-import { BsHandbagFill, BsShieldShaded, BsCartPlus, BsFillCartCheckFill } from 'react-icons/bs';
-import { FaUserCircle, FaTty, FaEdit, FaUpload, FaShoppingCart } from 'react-icons/fa';
-import { FaArrowRightLong, FaArrowLeftLong } from "react-icons/fa6";
+import { BsHandbagFill, BsShieldShaded, BsCartPlus, BsFillCartCheckFill, BsInfoCircleFill } from 'react-icons/bs';
+import { FaUserCircle, FaTty, FaEdit, FaUpload, FaShoppingCart, FaCheck } from 'react-icons/fa';
+import { FaArrowRightLong, FaArrowLeftLong, FaPlus } from "react-icons/fa6";
 import { TbFileLike } from "react-icons/tb";
 import {
     AiFillHome,
@@ -22,10 +22,10 @@ import {
     AiFillGift,
     AiOutlineDashboard,
     AiOutlineCaretDown,
-    AiOutlineCaretRight
+    AiOutlineCaretRight,
 } from 'react-icons/ai';
 import { IoMdHeart, IoIosArrowForward, IoIosArrowRoundBack, IoIosArrowDown } from "react-icons/io";
-import { IoCreateOutline, IoClose } from "react-icons/io5";
+import { IoCreateOutline, IoClose, IoSettingsOutline, IoImageOutline } from "react-icons/io5";
 import { BiDotsHorizontalRounded, BiCustomize } from "react-icons/bi";
 import { LiaLayerGroupSolid } from "react-icons/lia";
 import { GrDocumentUpdate } from "react-icons/gr";
@@ -80,6 +80,12 @@ const icons = {
     ImBin,
     HiOutlineShoppingBag,
     FaArrowLeftLong,
+    IoSettingsOutline,
+    IoImageOutline,
+    BsInfoCircleFill,
+    RiSubtractFill,
+    FaPlus,
+    FaCheck
 }
 
 export default icons

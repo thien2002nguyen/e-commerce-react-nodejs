@@ -75,3 +75,8 @@ export const apiUpdateAddress = (data) => axios({
     method: 'put',
     data
 })
+
+export const apiUpdateWishlist = (pid) => axios({
+    url: '/user/wishlist/' + pid,
+    method: 'put',
+})

@@ -19,19 +19,14 @@ const style = { "layout": "vertical" };
 const ButtonWrapper = ({ currency, showSpinner, amount, payload, dispatch, navigate }) => {
     const [{ isPending }] = usePayPalScriptReducer();
     const handleSaveOrder = async () => {
-        const response = await apiCreateOrder(payload)
-        if (response.success) {
-            const updatecart = await apiCart({ cart: [] })
-            if (updatecart.success) {
-                dispatch(getCurrent())
-                dispatch(showModal({ isShowModal: true, modalChildren: <CongratPay /> }))
-            }
-            else {
-                toast.error(updatecart.mes)
-            }
+        const response = await apiCreateOrder({ ...payload, status: 'Shipping' })
+        const removeCart = await apiCart({ cart: [] })
+        if (response.success && removeCart.success) {
+            dispatch(getCurrent())
+            dispatch(showModal({ isShowModal: true, modalChildren: <CongratPay /> }))
         }
         else {
-            toast.error(response.mes)
+            toast.error(response.mes || removeCart.mes)
         }
     }
     return (

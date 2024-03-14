@@ -26,10 +26,7 @@ const FeatureProducts = () => {
                 {products?.map((element, index) => (
                     <ProductCard
                         key={index}
-                        image={element.thumb}
-                        title={element.title}
-                        totalRatings={element.totalRatings}
-                        price={element.price}
+                        productData={element}
                     />
                 ))}
             </div>

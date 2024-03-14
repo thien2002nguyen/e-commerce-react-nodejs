@@ -219,3 +219,96 @@ export const memberSidebar = [
         icon: <ImExit size={20} />
     },
 ]
+
+const { IoSettingsOutline, IoImageOutline, BsInfoCircleFill } = icons
+
+export const servicesItems = [
+    {
+        id: 1,
+        title: 'Customizable Page',
+        text: 'Fusce arcu molestie eget libero consectetur congue consectetur in bibendum litora',
+        icon: <IoSettingsOutline size={72} />
+    },
+    {
+        id: 2,
+        title: 'Revolution Slider',
+        text: 'Fusce arcu molestie eget libero consectetur congue consectetur in bibendum litora',
+        icon: <IoImageOutline size={72} />
+    },
+    {
+        id: 3,
+        title: 'Drag & Drop Page',
+        text: 'Fusce arcu molestie eget libero consectetur congue consectetur in bibendum litora',
+        icon: <BsInfoCircleFill size={72} />
+    },
+    {
+        id: 4,
+        title: 'Revolution Slider',
+        text: 'Fusce arcu molestie eget libero consectetur congue consectetur in bibendum litora',
+        icon: <IoImageOutline size={72} />
+    },
+    {
+        id: 5,
+        title: 'Drag & Drop Page',
+        text: 'Fusce arcu molestie eget libero consectetur congue consectetur in bibendum litora',
+        icon: <BsInfoCircleFill size={72} />
+    },
+    {
+        id: 6,
+        title: 'Customizable Page',
+        text: 'Fusce arcu molestie eget libero consectetur congue consectetur in bibendum litora',
+        icon: <IoSettingsOutline size={72} />
+    }
+]
+
+export const FAQQuestions = [
+    {
+        id: 1,
+        question: 'What payment you accept?',
+        answer: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    },
+    {
+        id: 2,
+        question: 'In what country can you deliver?',
+        answer: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    },
+    {
+        id: 3,
+        question: 'What payments you accept?',
+        answer: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    },
+    {
+        id: 4,
+        question: 'How to track my parcel?',
+        answer: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    },
+    {
+        id: 5,
+        question: 'How to track my parcel?',
+        answer: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    },
+    {
+        id: 6,
+        question: 'Why amadea is the best e-commerce theme?',
+        answer: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    },
+]
+
+export const statusOrders = [
+    {
+        label: 'Cancelled',
+        value: 'Cancelled'
+    },
+    {
+        label: 'Processing',
+        value: 'Processing'
+    },
+    {
+        label: 'Shipping',
+        value: 'Shipping'
+    },
+    {
+        label: 'Successed',
+        value: 'Successed'
+    }
+]
