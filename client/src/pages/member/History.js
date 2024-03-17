@@ -1,20 +1,27 @@
-import { apiGetUserOrders } from 'apis'
+import { apiDeleteOrderByUser, apiGetUserOrders, apiUpdateQuantityProduct, apiUpdateStatusOrder } from 'apis'
 import { Button, CustomSelect, Pagination } from 'components'
 import withBaseComponent from 'hocs/withBaseComponent'
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { createSearchParams, useSearchParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
 import { statusOrders } from 'ultils/contants'
 import { formatMoney } from 'ultils/helpers'
 import icons from 'ultils/icons'
 
-const { RiDeleteBin5Fill } = icons
+const { FaCheck, RiDeleteBin5Fill, MdCancel } = icons
 
 const History = ({ navigate, location }) => {
     const [params] = useSearchParams()
     const [orders, setOrders] = useState([])
     const [counts, setCounts] = useState(0)
-    const fetchApiOrderUser = async (params) => {
+    const [update, setUpdate] = useState(false)
+    const render = useCallback(() => {
+        setUpdate(!update)
+        navigate(location.pathname)
+    }, [update, navigate, location])
+    const fetchOrderUser = async (params) => {
         const response = await apiGetUserOrders({
             ...params,
             limit: process.env.REACT_APP_LIMIT,
@@ -27,8 +34,8 @@ const History = ({ navigate, location }) => {
     }
     useEffect(() => {
         const queries = Object.fromEntries([...params])
-        fetchApiOrderUser(queries)
-    }, [params])
+        fetchOrderUser(queries)
+    }, [params, update])
     const handleSearchStatus = ({ value }) => {
         if (value) {
             navigate({
@@ -36,6 +43,82 @@ const History = ({ navigate, location }) => {
                 search: createSearchParams({ status: value }).toString()
             })
         }
+    }
+    const handleReceived = (oid) => {
+        Swal.fire({
+            title: 'Sure!',
+            text: 'Have you received your order yet?',
+            icon: 'info',
+            cancelButtonText: 'Cancel',
+            showCancelButton: true,
+            confirmButtonText: 'Sure'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await apiUpdateStatusOrder(oid, { status: 'Successed' })
+                if (response.success) {
+                    toast.success(response.mes)
+                    render()
+                }
+                else {
+                    toast.error(response.mes)
+                }
+            }
+        })
+    }
+    const handleCancel = (element) => {
+        Swal.fire({
+            title: 'Sure!',
+            text: 'Do you want to cancel your order?',
+            icon: 'info',
+            cancelButtonText: 'Cancel',
+            showCancelButton: true,
+            confirmButtonText: 'Sure'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                console.log(element);
+                const products = []
+                for (let item of element.currentProduct) {
+                    let value = {
+                        pid: item._id,
+                        quantity: item.quantity,
+                        sold: item.sold
+                    }
+                    products.push(value)
+                }
+                const updateQuantity = await apiUpdateQuantityProduct({ products })
+                if (updateQuantity.success) {
+                    const response = await apiUpdateStatusOrder(element._id, { status: 'Cancelled' })
+                    if (response.success) {
+                        toast.success(response.mes)
+                        render()
+                    }
+                    else {
+                        toast.error(response.mes)
+                    }
+                }
+            }
+        })
+    }
+    const handleDelete = (oid) => {
+        Swal.fire({
+            title: 'Sure!',
+            text: 'Do you want to delete order information?',
+            icon: 'info',
+            cancelButtonText: 'Cancel',
+            showCancelButton: true,
+            confirmButtonText: 'Sure'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await apiDeleteOrderByUser(oid)
+                if (response.success) {
+                    toast.success(response.mes)
+                    render()
+                }
+                else {
+                    toast.error(response.mes)
+                }
+            }
+        })
     }
     return (
         <div className='w-full relative'>
@@ -93,18 +176,29 @@ const History = ({ navigate, location }) => {
                                 <td className='p-2 text-center'>{moment(element.createdAt)?.format("DD/MM/YYYY")}</td>
                                 <td className='p-2'>
                                     <div className='flex gap-2 justify-center'>
-                                        <Button
+                                        {element.status.toLowerCase() === 'shipping' && <Button
                                             bg='bg-green-600'
                                             hover='hover:bg-green-500'
+                                            handleOnClick={() => handleReceived(element._id)}
+                                            title='Received'
                                         >
-                                            Received
-                                        </Button>
-                                        <Button>
-                                            Cancel
-                                        </Button>
-                                        <Button>
-                                            <RiDeleteBin5Fill />
-                                        </Button>
+                                            <FaCheck size={18} />
+                                        </Button>}
+                                        {element.status.toLowerCase() === 'processing' && <Button
+                                            handleOnClick={() => handleCancel(element)}
+                                            title='Cancel'
+                                        >
+                                            <MdCancel size={18} />
+                                        </Button>}
+                                        {(element.status.toLowerCase() === 'cancelled' ||
+                                            element.status.toLowerCase() === 'successed') &&
+                                            <Button
+                                                handleOnClick={() => handleDelete(element._id)}
+                                                title='Delete'
+                                            >
+                                                <RiDeleteBin5Fill size={18} />
+                                            </Button>
+                                        }
                                     </div>
                                 </td>
                             </tr>

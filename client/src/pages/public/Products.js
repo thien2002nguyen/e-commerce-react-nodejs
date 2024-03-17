@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useSearchParams, useNavigate, createSearchParams } from 'react-router-dom';
-import { Breadcrumb, InputSelect, Pagination, Product, SearchItem } from '../../components';
-import { apiGetProducts } from '../../apis';
-import { sorts } from '../../ultils/contants';
+import { Breadcrumb, InputSelect, Pagination, Product, SearchItem } from 'components';
+import { apiGetProducts } from 'apis';
+import { sorts } from 'ultils/contants';
 
 const Products = () => {
     const navigate = useNavigate()

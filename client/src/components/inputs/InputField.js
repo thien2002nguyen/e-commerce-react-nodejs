@@ -11,7 +11,8 @@ const InputField = ({
     convertStyle,
     fullWidth,
     isHideLabel,
-    convertPlaceholder
+    convertPlaceholder,
+    heightError
 }) => {
     const [isFocus, setIsFocus] = useState(false)
     const handleForcus = () => {
@@ -39,7 +40,7 @@ const InputField = ({
                 onBlur={() => setIsFocus(false)}
                 onKeyDown={e => e.code.toLocaleLowerCase() === 'enter' && handleSubmit()}
             />
-            <div className='h-4'>
+            <div className={`${heightError ? 'h-4' : 'h-0'}`}>
                 {invalidFields?.some(element => element.name === nameKey) && <small
                     className='text-main text-[10px]'>
                     {invalidFields?.find(element => element.name === nameKey)?.mes}

@@ -47,7 +47,7 @@ const ManageProducts = () => {
         }
         fetchProducts(queries)
     }, [params, queriesDebounce, update])
-    const handleDeleteUser = (pid) => {
+    const handleDeleteProduct = (pid) => {
         Swal.fire({
             title: 'Are you sure',
             text: 'Are you ready remove this product',
@@ -69,15 +69,15 @@ const ManageProducts = () => {
         window.scrollTo(0, 0);
     }, [editProduct])
     return (
-        <div className='w-full relative'>
-            {editProduct && <div className='absolute z-20 bg-gray-100'>
+        <div className='w-full'>
+            {editProduct && <div className='bg-gray-100'>
                 <UpdateProduct
                     editProduct={editProduct}
                     render={render}
                     setEditProduct={setEditProduct}
                 />
             </div>}
-            {customizeVariants && <div className='absolute z-20 bg-gray-100'>
+            {customizeVariants && <div className='bg-gray-100'>
                 <CustomizeVariant
                     customizeVariants={customizeVariants}
                     render={render}
@@ -158,7 +158,7 @@ const ManageProducts = () => {
                                                 <FaEdit />
                                             </Button>
                                             <Button
-                                                handleOnClick={() => handleDeleteUser(element._id)}
+                                                handleOnClick={() => handleDeleteProduct(element._id)}
                                             >
                                                 <RiDeleteBin5Fill />
                                             </Button>

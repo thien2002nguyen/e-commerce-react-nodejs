@@ -9,12 +9,14 @@ export const userSlice = createSlice({
         token: null,
         isLoading: false,
         errorMessage: '',
-        currentCart: []
+        currentCart: [],
+        refreshToken: null
     },
     reducers: {
         login: (state, action) => {
             state.isLoggedIn = action.payload.isLoggedIn
             state.token = action.payload.token
+            state.refreshToken = action.payload.refreshToken
         },
         logout: (state) => {
             state.current = null

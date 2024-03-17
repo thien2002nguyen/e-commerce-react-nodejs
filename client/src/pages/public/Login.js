@@ -16,7 +16,7 @@ const { IoIosArrowRoundBack } = icons
 
 const Login = () => {
     const navigate = useNavigate()
-    const dispath = useDispatch()
+    const dispatch = useDispatch()
     const [payload, setPayload] = useState({
         firstname: '',
         lastname: '',
@@ -43,9 +43,9 @@ const Login = () => {
         const invalids = isRegister ? validate(payload, setInvalidFields) : validate(data, setInvalidFields)
         if (invalids === 0) {
             if (isRegister) {
-                dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
+                dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
                 const response = await apiRegister(payload)
-                dispath(showModal({ isShowModal: false, modalChildren: null }))
+                dispatch(showModal({ isShowModal: false, modalChildren: null }))
                 if (response.success) {
                     Swal.fire('Congratulation!', response.mes, 'success').then(() => {
                         setIsRegister(false)
@@ -57,13 +57,13 @@ const Login = () => {
                 }
             }
             else {
-                dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
+                dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
                 const response = await apiLogin(data)
-                dispath(showModal({ isShowModal: false, modalChildren: null }))
+                dispatch(showModal({ isShowModal: false, modalChildren: null }))
                 if (response.success) {
                     setIsRegister(false)
                     resetPayload()
-                    dispath(login({ isLoggedIn: true, token: response.accessToken }))
+                    dispatch(login({ isLoggedIn: true, token: response.accessToken, refreshToken: response.refreshToken }))
                     searchParams.get('redirect') ? navigate(searchParams.get('redirect')) : navigate(`/${path.HOME}`)
                 }
                 else {
@@ -71,11 +71,11 @@ const Login = () => {
                 }
             }
         }
-    }, [payload, isRegister, navigate, dispath, searchParams])
+    }, [payload, isRegister, navigate, dispatch, searchParams])
     const handleForgotPassword = async () => {
-        dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
+        dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
         const response = await apiForgotPassword({ email })
-        dispath(showModal({ isShowModal: false, modalChildren: null }))
+        dispatch(showModal({ isShowModal: false, modalChildren: null }))
         if (response.success) {
             toast.success(response.mes)
         }
@@ -138,6 +138,7 @@ const Login = () => {
                             handleSubmit={handleSubmit}
                             fullWidth
                             convertStyle='w-full'
+                            heightError
                         />
                         <InputField
                             value={payload.lastname}
@@ -148,6 +149,7 @@ const Login = () => {
                             handleSubmit={handleSubmit}
                             fullWidth
                             convertStyle='w-full'
+                            heightError
                         />
                     </div>}
                     <InputField
@@ -159,6 +161,7 @@ const Login = () => {
                         handleSubmit={handleSubmit}
                         fullWidth
                         convertStyle='w-full'
+                        heightError
                     />
                     {isRegister && <InputField
                         value={payload.phone}
@@ -169,6 +172,7 @@ const Login = () => {
                         handleSubmit={handleSubmit}
                         fullWidth
                         convertStyle='w-full'
+                        heightError
 
                     />}
                     <InputField
@@ -181,6 +185,7 @@ const Login = () => {
                         handleSubmit={handleSubmit}
                         fullWidth
                         convertStyle='w-full'
+                        heightError
                     />
                     <Button
                         handleOnClick={handleSubmit}

@@ -26,7 +26,6 @@ const MarkdownEditor = ({ label, value, changeValue, name, invalidFields, setInv
                     onChange={e => changeValue(prev => ({ ...prev, [name]: e.target.getContent() }))}
                     onFocus={() => setInvalidFields && setInvalidFields([])}
                 />
-
             </div>
             <div className='h-4'>
                 {invalidFields?.some(elment => elment.name === name) && <small className='text-[10px] text-main'>

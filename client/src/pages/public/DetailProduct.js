@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { createSearchParams, useParams } from 'react-router-dom';
-import { apiGetProduct, apiGetProducts } from '../../apis/products';
-import { Breadcrumb, Button, CustomSlider, ProductExtraInfoItem, ProductInfomatin, SelectQuantity } from '../../components';
+import { apiGetProduct, apiGetProducts } from 'apis/products';
+import { Breadcrumb, Button, CustomSlider, ProductExtraInfoItem, ProductInfomatin, SelectQuantity } from 'components';
 import Slider from "react-slick";
-import { formatMoney, renderStartFromNumber } from '../../ultils/helpers'
-import icons from '../../ultils/icons';
+import { formatMoney, renderStartFromNumber } from 'ultils/helpers'
+import icons from 'ultils/icons';
 import DOMPurify from 'dompurify';
 import defaultProduct from 'assets/default-product-image.png'
 import { useSelector } from 'react-redux';
@@ -184,7 +184,7 @@ const DetailProduct = ({ navigate, dispatch, location }) => {
                         ))}
                     </ul>}
                     {product?.description?.length === 1 && <div
-                        className='text-sm text-gray-500 leading-6 px-2 line-clamp-[12]'
+                        className='text-sm text-gray-500 leading-6 line-clamp-[12]'
                         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product?.description[0]) }}
                     >
                     </div>}
@@ -218,12 +218,14 @@ const DetailProduct = ({ navigate, dispatch, location }) => {
                         </div>
                     </div>
                     <div className='flex flex-col gap-8'>
-                        <SelectQuantity
+                        {product?.quantity > 0 && <SelectQuantity
                             quantity={quantity}
                             handleQuantity={handleQuantity}
                             handleChangeQuantity={handleChangeQuantity}
-                        />
-                        <Button fullWidth handleOnClick={handleAddToCart}>Add to Cart</Button>
+                        />}
+                        {product?.quantity > 0 ? <Button fullWidth handleOnClick={handleAddToCart}>Add to Cart</Button> :
+                            <Button fullWidth bg='bg-gray-500' hover='hover:bg-none'>Sold out</Button>
+                        }
                     </div>
                 </div>
                 <div className='col-span-1 flex flex-col gap-3'>

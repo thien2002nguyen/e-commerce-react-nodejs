@@ -3,3 +3,6 @@ POST http://localhost:5000/api/insert/product/
 
 ###
 POST http://localhost:5000/api/insert/cate/
+
+###
+POST http://localhost:5000/api/insert/blogcate/

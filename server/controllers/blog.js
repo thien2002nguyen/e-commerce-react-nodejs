@@ -3,34 +3,83 @@ const asyncHandler = require('express-async-handler')
 
 const createNewBlog = asyncHandler(async (req, res) => {
     const { title, description, category } = req.body
-    if (!title || !description || !category) {
+    const imageFile = req.file
+    if (!title || !description || !category || !imageFile) {
         throw new Error('Missing inputs')
     }
-    const response = await Blog.create(req.body)
+    const data = { title, description, category, image: imageFile.path }
+    const response = await Blog.create(data)
     return res.status(200).json({
         success: response ? true : false,
-        createdBlog: response ? response : 'Can not create new blog'
+        mes: response ? 'Created' : 'Can not create new blog'
     })
 })
 
 const updateBlog = asyncHandler(async (req, res) => {
     const { bid } = req.params
-    if (Object.keys(req.body).length === 0) {
-        throw new Error('Missing inputs')
+    const { title, category, description } = req.body
+    const data = {}
+    if (title) {
+        data.title = title
     }
-    const response = await Blog.findByIdAndUpdate(bid, req.body, { new: true })
+    if (category) {
+        data.category = category
+    }
+    if (description) {
+        data.description = description
+    }
+    if (req.file) {
+        data.image = req.file.path
+    }
+    const response = await Blog.findByIdAndUpdate(bid, data, { new: true })
     return res.status(200).json({
         success: response ? true : false,
-        updatedBlog: response ? response : 'Can not update blog'
+        mes: response ? 'Updated' : 'Can not update blog'
     })
 })
 
 const getBlogs = asyncHandler(async (req, res) => {
-    const response = await Blog.find()
-    return res.status(200).json({
-        success: response ? true : false,
-        blogs: response ? response : 'Can not get blogs'
-    })
+    const queries = { ...req.query }
+    const excludeFields = ['limit', 'sort', 'page', 'fields']
+    excludeFields.forEach(element => delete queries[element])
+    let queryString = JSON.stringify(queries);
+    queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchElement => `$${matchElement}`)
+    const formatedQueries = JSON.parse(queryString)
+    let queriesObject = {}
+    if (queries?.search) {
+        delete formatedQueries.search
+        queriesObject = {
+            $or: [
+                { title: { $regex: queries.search, $options: 'i' } },
+                { category: { $regex: queries.search, $options: 'i' } },
+            ]
+        }
+    }
+    const allQuery = { ...formatedQueries, ...queriesObject }
+    let queryCommand = Blog.find(allQuery)
+    if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ')
+        queryCommand = queryCommand.sort(sortBy)
+    }
+    if (req.query.fields) {
+        const fields = req.query.fields.split(',').join(' ')
+        queryCommand = queryCommand.select(fields)
+    }
+    const page = +req.query.page || 1
+    const limit = +req.query.limit || process.env.LIMIT_BLOG
+    const skip = (page - 1) * limit
+    queryCommand.skip(skip).limit(limit)
+    try {
+        const response = await queryCommand.exec()
+        const counts = await Blog.find(allQuery).countDocuments()
+        return res.status(200).json({
+            success: response ? true : false,
+            counts,
+            data: response ? response : 'Can not get blogs',
+        });
+    } catch {
+        throw new Error('Something went wrong')
+    }
 })
 
 /**
@@ -52,7 +101,7 @@ const likeBlog = asyncHandler(async (req, res) => {
             { $pull: { dislikes: _id } }, { new: true })
         return res.status(200).json({
             success: response ? true : false,
-            response
+            mes: response ? 'Liked' : 'Something went wrong'
         })
     }
     const isLiked = blog?.likes?.find(element => element.toString() === _id)
@@ -114,28 +163,16 @@ const getBlog = asyncHandler(async (req, res) => {
         .populate('dislikes', 'firstname lastname')
     return res.status(200).json({
         success: blog ? true : false,
-        response: blog ? blog : 'Something went wrong'
+        data: blog ? blog : 'Something went wrong'
     })
 })
 
 const deleteBlog = asyncHandler(async (req, res) => {
     const { bid } = req.params
-    const blog = await Blog.findByIdAndDelete(bid)
-    return res.status(200).json({
-        success: blog ? true : false,
-        deleteBlog: blog ? blog : 'Something went wrong'
-    })
-})
-
-const uploadImageBlog = asyncHandler(async (req, res) => {
-    const { bid } = req.params
-    if (!req.file) {
-        throw new Error('Missing inputs')
-    }
-    const response = await Blog.findByIdAndUpdate(bid, { image: req.file.path }, { new: true })
+    const response = await Blog.findByIdAndDelete(bid)
     return res.status(200).json({
         success: response ? true : false,
-        updatedBlog: response ? response : 'Can not upload image blog'
+        mes: response ? 'Deleted' : 'Something went wrong'
     })
 })
 
@@ -147,5 +184,4 @@ module.exports = {
     dislikeBlog,
     getBlog,
     deleteBlog,
-    uploadImageBlog,
 }

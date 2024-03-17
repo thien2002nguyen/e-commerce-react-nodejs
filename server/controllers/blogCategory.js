@@ -5,15 +5,15 @@ const createCategory = asyncHandler(async (req, res) => {
     const response = await BlogCategory.create(req.body)
     return res.status(200).json({
         success: response ? true : false,
-        createdCategory: response ? response : 'Can not create new blog category'
+        mes: response ? 'Created' : 'Can not create new blog category'
     })
 })
 
 const getCategories = asyncHandler(async (req, res) => {
-    const response = await BlogCategory.find().select('title _id')
+    const response = await BlogCategory.find()
     return res.status(200).json({
         success: response ? true : false,
-        blogCategories: response ? response : 'Can not get blog category'
+        data: response ? response : 'Can not get blog category'
     })
 })
 
@@ -22,7 +22,7 @@ const updateCategory = asyncHandler(async (req, res) => {
     const response = await BlogCategory.findByIdAndUpdate(bcid, req.body, { new: true })
     return res.status(200).json({
         success: response ? true : false,
-        updatedCategory: response ? response : 'Can not update blog category'
+        mes: response ? 'Updated' : 'Can not update blog category'
     })
 })
 
@@ -31,7 +31,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
     const response = await BlogCategory.findByIdAndDelete(bcid)
     return res.status(200).json({
         success: response ? true : false,
-        deleteCategory: response ? response : 'Can not delete blog category'
+        mes: response ? 'Deleted' : 'Can not delete blog category'
     })
 })
 

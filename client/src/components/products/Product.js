@@ -20,7 +20,8 @@ const {
     AiFillEye,
     BsCartPlus,
     IoMdHeart,
-    BsFillCartCheckFill
+    BsFillCartCheckFill,
+    MdOutlineRemoveShoppingCart
 } = icons
 
 const Product = ({
@@ -104,7 +105,7 @@ const Product = ({
             >
                 {showDescription && isShow && <div className='absolute inset-0 flex
                         flex-col gap-2 z-10 bg-white animate-fade-in'>
-                    <div className='flex justify-between w-full border-b px-4 pt-1 pb-2'>
+                    <div className='flex justify-between w-full px-4 pt-1 pb-2'>
                         <span className='min-h-12'>{productData?.title}</span>
                         <span className='min-h-12'>{`$${formatMoney(productData?.price) || 0} USD`}</span>
                     </div>
@@ -133,10 +134,13 @@ const Product = ({
                         {current?.cart?.some(element => element.product?._id === productData?._id.toString()) ?
                             <span title='Added to cart' onClick={(e) => handleClickOptions(e)}>
                                 <SelectOption icon={<BsFillCartCheckFill />} active />
-                            </span> :
-                            <span title='Add to cart' onClick={(e) => handleClickOptions(e, 'CART')}>
-                                <SelectOption icon={<BsCartPlus />} />
-                            </span>
+                            </span> : productData.quantity > 0 ?
+                                <span title='Add to cart' onClick={(e) => handleClickOptions(e, 'CART')}>
+                                    <SelectOption icon={<BsCartPlus />} />
+                                </span> :
+                                <span title='Sold out' onClick={(e) => handleClickOptions(e)}>
+                                    <SelectOption icon={<MdOutlineRemoveShoppingCart />} active />
+                                </span>
                         }
                         <span title='Quick view' onClick={(e) => handleClickOptions(e, 'QUICKVIEW')}>
                             <SelectOption icon={<AiFillEye />} />

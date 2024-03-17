@@ -15,7 +15,7 @@ import { apiAddVariant } from 'apis'
 const { FaUpload, MdOutlineExitToApp, GrDocumentUpdate } = icons
 
 const CustomizeVariant = ({ customizeVariants, render, setCustomizeVariants }) => {
-    const dispath = useDispatch()
+    const dispatch = useDispatch()
     const { register, formState: { errors }, reset, handleSubmit, watch } = useForm()
     const [preview, setPreview] = useState({
         thumb: null,
@@ -93,9 +93,9 @@ const CustomizeVariant = ({ customizeVariants, render, setCustomizeVariants }) =
                     formData.append('images', image)
                 }
             }
-            dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
+            dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
             const response = await apiAddVariant(customizeVariants?._id, formData)
-            dispath(showModal({ isShowModal: false, modalChildren: null }))
+            dispatch(showModal({ isShowModal: false, modalChildren: null }))
             if (response.success) {
                 toast.success(response.mes)
                 render()

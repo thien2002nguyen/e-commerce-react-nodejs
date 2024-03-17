@@ -5,7 +5,7 @@ const asyncHandler = require('express-async-handler')
 
 const createOrder = asyncHandler(async (req, res) => {
     const { _id } = req.user
-    const { coupon, products, total, address, status } = req.body
+    const { coupon, products, total, address, status, currentProduct } = req.body
     const createData = { products, total, orderBy: _id, address }
     if (coupon) {
         const selectedCoupon = await Coupon.findById(coupon)
@@ -16,6 +16,9 @@ const createOrder = asyncHandler(async (req, res) => {
     if (status) {
         createData.status = status
     }
+    if (currentProduct) {
+        createData.currentProduct = currentProduct
+    }
     const response = await Order.create(createData)
     return res.status(200).json({
         success: response ? true : false,
@@ -24,15 +27,41 @@ const createOrder = asyncHandler(async (req, res) => {
 })
 
 const updateStatus = asyncHandler(async (req, res) => {
+    const { _id } = req.user
     const { oid } = req.params
     const { status } = req.body
     if (!status) {
         throw new Error('Missing status')
     }
-    const response = await Order.findByIdAndUpdate(oid, { status }, { new: true })
+    const response = await Order.findByIdAndUpdate(oid, { orderBy: _id, status }, { new: true })
     return res.status(200).json({
         success: response ? true : false,
         mes: response ? 'Updated' : 'Can not update status'
+    })
+})
+
+const deleteOrderByUser = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    const { oid } = req.params
+    if (!oid) {
+        throw new Error('Missing input')
+    }
+    const response = await Order.findByIdAndDelete(oid, { orderBy: _id })
+    return res.status(200).json({
+        success: response ? true : false,
+        mes: response ? 'Deleted' : 'Can not delete order'
+    })
+})
+
+const deleteOrder = asyncHandler(async (req, res) => {
+    const { oid } = req.params
+    if (!oid) {
+        throw new Error('Missing input')
+    }
+    const response = await Order.findByIdAndDelete(oid)
+    return res.status(200).json({
+        success: response ? true : false,
+        mes: response ? 'Deleted' : 'Can not delete order'
     })
 })
 
@@ -78,7 +107,7 @@ const getOrders = asyncHandler(async (req, res) => {
     let queryString = JSON.stringify(queries);
     queryString = queryString.replace(/\b(gte|gt|lt|lte)\b/g, matchElement => `$${matchElement}`)
     const formatedQueries = JSON.parse(queryString)
-    const allQuery = { formatedQueries }
+    const allQuery = { ...formatedQueries }
     let queryCommand = Order.find(allQuery)
     if (req.query.sort) {
         const sortBy = req.query.sort.split(',').join(' ')
@@ -88,7 +117,7 @@ const getOrders = asyncHandler(async (req, res) => {
         const fields = req.query.fields.split(',').join(' ')
         queryCommand = queryCommand.select(fields)
     }
-    const page = +req.query.page || 10
+    const page = +req.query.page || 1
     const limit = +req.query.limit || process.env.LIMIT_ORDER
     const skip = (page - 1) * limit
     queryCommand.skip(skip).limit(limit)
@@ -110,4 +139,6 @@ module.exports = {
     updateStatus,
     getUserOrders,
     getOrders,
+    deleteOrderByUser,
+    deleteOrder
 }

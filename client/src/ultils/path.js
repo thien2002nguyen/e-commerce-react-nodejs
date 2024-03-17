@@ -5,6 +5,7 @@ const path = {
     LOGIN: 'login',
     PRODUCTS_CATEGORY: ':category',
     BLOGS: 'blogs',
+    DETAIL_BLOGS: 'blogs/:bid/:title',
     OUR_SERVICES: 'services',
     FAQ: 'faqs',
     DETAIL_PRODUCT__CATEGORY__PID__TITLE: ':category/:pid/:title',
@@ -20,6 +21,8 @@ const path = {
     MANAGE_ORDER: 'manage-order',
     MANAGE_PRODUCT: 'manage-products',
     CREATE_PRODUCT: 'create-product',
+    MANAGE_BLOG: 'manage-blogs',
+    CREATE_BLOG: 'create-blog',
 
     //Member
     MEMBER: 'member',

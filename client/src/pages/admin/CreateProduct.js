@@ -12,7 +12,7 @@ import { showModal } from 'store/app/appSlice';
 const { FaUpload, IoCreateOutline } = icons
 
 const CreateProduct = () => {
-    const dispath = useDispatch()
+    const dispatch = useDispatch()
     const { categories } = useSelector(state => state.app)
     const { register, formState: { errors }, reset, handleSubmit, watch } = useForm()
     const [payload, setPayload] = useState({
@@ -92,9 +92,9 @@ const CreateProduct = () => {
                     formData.append('images', image)
                 }
             }
-            dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
+            dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
             const response = await apiCreateProduct(formData)
-            dispath(showModal({ isShowModal: false, modalChildren: null }))
+            dispatch(showModal({ isShowModal: false, modalChildren: null }))
             if (response.success) {
                 toast.success(response.mes)
                 reset()

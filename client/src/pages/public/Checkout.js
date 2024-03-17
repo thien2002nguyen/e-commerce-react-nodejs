@@ -5,13 +5,16 @@ import { formatMoney } from 'ultils/helpers';
 import icons from 'ultils/icons';
 import withBaseComponent from 'hocs/withBaseComponent';
 import path from 'ultils/path';
-import { Button, InputForm, Paypal } from 'components';
+import { Button, CongratPay, InputForm, Paypal, SelectForm } from 'components';
 import { useForm } from 'react-hook-form';
-import { apiUpdateAddress } from 'apis';
+import { apiCart, apiCreateOrder, apiUpdateAddress, apiUpdateQuantityProduct } from 'apis';
 import { getCurrent } from 'store/user/asyncActions';
 import { toast } from 'react-toastify';
+import { paymentOptions } from 'ultils/contants';
+import Swal from 'sweetalert2';
+import { showModal } from 'store/app/appSlice';
 
-const { HiOutlineShoppingBag, FaArrowLeftLong, FaArrowRightLong } = icons
+const { HiOutlineShoppingBag } = icons
 
 const Checkout = ({ navigate, dispatch }) => {
     const { current } = useSelector(state => state.user)
@@ -22,7 +25,6 @@ const Checkout = ({ navigate, dispatch }) => {
     }, [current, setValue])
     const handleUpdateAddress = async () => {
         if (watch('address')) {
-            setIsShowPaypal(true)
             const response = await apiUpdateAddress({ address: watch('address') })
             if (response.success) {
                 dispatch(getCurrent())
@@ -32,10 +34,72 @@ const Checkout = ({ navigate, dispatch }) => {
             }
         }
         else {
-            setIsShowPaypal(false)
             toast.error('No addresses have been entered yet')
         }
+        if (watch('payment') && +watch('payment') === 1) {
+            setIsShowPaypal(true)
+        }
+        else {
+            Swal.fire({
+                title: 'Sure!',
+                text: 'Order confirmation?',
+                icon: 'info',
+                cancelButtonText: 'Cancel',
+                showCancelButton: true,
+                confirmButtonText: 'Sure'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const removeCart = await apiCart({ cart: [] })
+                    const products = []
+                    for (let item of current?.cart) {
+                        if (item.product?.quantity >= item.quantity) {
+                            let value = {
+                                pid: item.product?._id,
+                                quantity: item.product?.quantity - item.quantity,
+                                sold: item.product?.sold + item.quantity
+                            }
+                            products.push(value)
+                        }
+                        else {
+                            toast.error(`Product ${item.title} is out of stock, sorry`)
+                        }
+                    }
+                    const updateQuantity = await apiUpdateQuantityProduct({ products })
+                    if (removeCart.success && updateQuantity.success) {
+                        const currentProduct = []
+                        for (let item of current?.cart) {
+                            currentProduct.push(item.product)
+                        }
+                        const response = await apiCreateOrder({
+                            products: current?.cart,
+                            total: current?.cart?.reduce((sum, element) => element.price * element.quantity + sum, 0),
+                            address: current?.address,
+                            currentProduct
+                        })
+                        if (response.success) {
+                            dispatch(getCurrent())
+                            dispatch(showModal({ isShowModal: true, modalChildren: <CongratPay /> }))
+                            Swal.fire({
+                                title: 'Congratulate!',
+                                text: 'Order Success',
+                                icon: 'success',
+                                confirmButtonText: 'Continue shopping now'
+                            }).then(async (result) => {
+                                if (result.isConfirmed) {
+                                    navigate(`/${path.PRODUCTS}`)
+                                    dispatch(showModal({ isShowModal: false, modalChildren: null }))
+                                }
+                            })
+                        }
+                        else {
+                            toast.error(response.mes || removeCart.mes)
+                        }
+                    }
+                }
+            })
+        }
     }
+
     return (
         <>
             {!current?.cart?.length > 0 && <div className='w-screen h-screen flex flex-col items-center 
@@ -85,15 +149,25 @@ const Checkout = ({ navigate, dispatch }) => {
                                 styleInput='px-4 py-2'
                                 styleDiv='h-24 pr-8'
                             />
-                            <div className='flex justify-end pr-8'>
+                            <SelectForm
+                                label='Payment Options'
+                                options={paymentOptions}
+                                register={register}
+                                id='payment'
+                                validate={{ required: 'Need fill this field' }}
+                                styleSelect='px-4 py-2'
+                                errors={errors}
+                                fullWidth
+                                styleDiv='flex-auto h-24 pr-8'
+                            />
+                            {watch('address') && watch('payment') && <div className='flex justify-end pr-8'>
                                 <Button
                                     handleOnClick={handleUpdateAddress}
                                     customStyle='flex items-center gap-2'
                                 >
                                     Continue
-                                    <FaArrowRightLong />
                                 </Button>
-                            </div>
+                            </div>}
                         </div>}
                         {isShowPaypal && current?.address && <div className='pr-8'>
                             <div className='my-4 flex gap-2'>
@@ -113,8 +187,7 @@ const Checkout = ({ navigate, dispatch }) => {
                                     handleOnClick={() => setIsShowPaypal(false)}
                                     customStyle='flex items-center gap-2'
                                 >
-                                    <FaArrowLeftLong />
-                                    <span>Back</span>
+                                    Back
                                 </Button>
                             </div>
                         </div>}

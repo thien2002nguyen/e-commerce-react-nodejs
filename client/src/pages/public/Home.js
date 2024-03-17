@@ -1,7 +1,7 @@
 import React from 'react';
-import { Sidebar, Banner, BestSeller, DealDaily, FeatureProducts, CustomSlider } from '../../components';
+import { Sidebar, Banner, BestSeller, DealDaily, FeatureProducts, CustomSlider, BlogPost } from 'components';
 import { useSelector } from 'react-redux';
-import icons from '../../ultils/icons';
+import icons from 'ultils/icons';
 import defaultProduct from 'assets/default-product-image.png'
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
@@ -12,8 +12,8 @@ const Home = () => {
     const { categories } = useSelector(state => state.app)
     const navigate = useNavigate()
     return (
-        <div className='w-main mx-auto'>
-            <div className='w-full flex mt-4'>
+        <div className='w-full mx-auto'>
+            <div className='w-main mx-auto flex mt-4'>
                 <div className='flex flex-col gap-5 w-1/4 flex-auto'>
                     <Sidebar />
                     <DealDaily />
@@ -23,10 +23,10 @@ const Home = () => {
                     <BestSeller />
                 </div>
             </div>
-            <div className='w-full my-8'>
+            <div className='w-main mx-auto my-8'>
                 <FeatureProducts />
             </div>
-            <div className='my-8 w-full'>
+            <div className='my-8 w-main mx-auto'>
                 <h3 className='text-[20px] font-semibold py-[15px] pb-4 border-b-2 border-main'>
                     NEW ARRIVALS
                 </h3>
@@ -34,7 +34,7 @@ const Home = () => {
                     <CustomSlider products={newProducts} activedTab='new' px showDescription={true} />
                 </div>
             </div>
-            <div className='my-8 w-full'>
+            <div className='my-8 w-main mx-auto'>
                 <h3 className='text-[20px] font-semibold py-[15px] pb-4 border-b-2 border-main'>
                     HOT COLLECTIONS
                 </h3>
@@ -70,9 +70,12 @@ const Home = () => {
                 </div>
             </div>
             <div className='my-8 w-full'>
-                <h3 className='text-[20px] font-semibold py-[15px] pb-4 border-b-2 border-main'>
+                <h3 className='text-[20px] w-main mx-auto font-semibold py-[15px] pb-4 border-b-2 border-main'>
                     BLOG POSTS
                 </h3>
+                <div className='w-[1196px] mt-4 mx-auto'>
+                    <BlogPost />
+                </div>
             </div>
         </div>
     );

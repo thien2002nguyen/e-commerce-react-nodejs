@@ -165,13 +165,15 @@ const QuickView = ({ productData, dispatch, location, navigate }) => {
                             ))}
                         </div>
                     </div>
-                    <SelectQuantity
+                    {productData?.quantity > 0 && <SelectQuantity
                         quantity={quantity}
                         handleQuantity={handleQuantity}
                         handleChangeQuantity={handleChangeQuantity}
-                    />
+                    />}
                     <div className='mt-4'>
-                        <Button handleOnClick={handleAddToCart}>Add to Cart</Button>
+                        {productData?.quantity > 0 ? <Button handleOnClick={handleAddToCart}>Add to Cart</Button> :
+                            <Button bg='bg-gray-500' hover='hover:bg-none'>Sold out</Button>
+                        }
                     </div>
                 </div>
             </div>

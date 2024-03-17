@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { Button, Loading } from '../../components';
+import { Button, Loading } from 'components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { apiResetPassword } from '../../apis';
+import { apiResetPassword } from 'apis';
 import { toast } from 'react-toastify';
-import path from '../../ultils/path';
+import path from 'ultils/path';
 import { useDispatch } from 'react-redux';
 import { showModal } from 'store/app/appSlice';
 
 const ResetPassword = () => {
-    const dispath = useDispatch()
+    const dispatch = useDispatch()
     const [password, setPassword] = useState('')
     const { token } = useParams()
     const navigate = useNavigate()
     const handleResetPassword = async () => {
-        dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
+        dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
         const response = await apiResetPassword({ password, token })
-        dispath(showModal({ isShowModal: false, modalChildren: null }))
+        dispatch(showModal({ isShowModal: false, modalChildren: null }))
         if (response.success) {
             toast.success(response.mes)
             navigate(`/${path.LOGIN}`)

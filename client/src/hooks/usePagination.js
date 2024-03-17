@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import { generateRange } from '../ultils/helpers';
-import icons from '../ultils/icons';
+import { generateRange } from 'ultils/helpers';
+import icons from 'ultils/icons';
 const { BiDotsHorizontalRounded } = icons
-const usePagination = (totalProductCount, currentPage, siblingCount = 1) => {
+const usePagination = (totalProductCount, currentPage, limit = +process.env.REACT_APP_LIMIT, siblingCount = 1,) => {
     const paginationArray = useMemo(() => {
-        const pageSize = process.env.REACT_APP_LIMIT
+        const pageSize = limit
         const paginationCount = Math.ceil(totalProductCount / pageSize)
         const totalPaginationItem = siblingCount + 5
         if (paginationCount <= totalPaginationItem) {
@@ -27,7 +27,7 @@ const usePagination = (totalProductCount, currentPage, siblingCount = 1) => {
             const middleRange = generateRange(siblingLeft, siblingRight)
             return [1, <BiDotsHorizontalRounded />, ...middleRange, <BiDotsHorizontalRounded />, paginationCount]
         }
-    }, [totalProductCount, currentPage, siblingCount])
+    }, [totalProductCount, currentPage, siblingCount, limit])
     return paginationArray
 };
 

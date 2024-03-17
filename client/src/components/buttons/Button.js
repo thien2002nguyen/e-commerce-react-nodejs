@@ -9,9 +9,11 @@ const Button = ({
     bg = 'bg-red-600',
     hover = 'hover:bg-red-500',
     rounded = 'rounded-md',
+    title
 }) => {
     return (
         <button
+            title={title}
             type={type}
             className={`px-4 py-2 ${rounded} text-white ${bg} ${hover}
                 duration-200 ${fullWidth && 'w-full'} ${customStyle && customStyle}`}

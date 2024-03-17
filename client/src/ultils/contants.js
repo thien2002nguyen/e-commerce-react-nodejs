@@ -121,7 +121,7 @@ export const VoteOptions = [
     },
 ]
 
-const { AiOutlineDashboard, MdGroups, LiaLayerGroupSolid, RiBillLine, ImExit } = icons
+const { AiOutlineDashboard, MdGroups, LiaLayerGroupSolid, RiBillLine, ImExit, AiOutlineLike } = icons
 
 export const adminSidebar = [
     {
@@ -163,6 +163,22 @@ export const adminSidebar = [
     },
     {
         id: 5,
+        type: 'parent',
+        text: 'Manage blogs',
+        icon: <AiOutlineLike size={20} />,
+        submenu: [
+            {
+                text: 'Create blog',
+                path: `/${path.ADMIN}/${path.CREATE_BLOG}`
+            },
+            {
+                text: 'Manage blogs',
+                path: `/${path.ADMIN}/${path.MANAGE_BLOG}`
+            }
+        ]
+    },
+    {
+        id: 6,
         type: 'single',
         text: 'Exit',
         path: `/${path.HOME}`,
@@ -311,4 +327,24 @@ export const statusOrders = [
         label: 'Successed',
         value: 'Successed'
     }
+]
+
+export const paymentOptions = [
+    { code: 0, value: 'Thanh toán khi nhận hàng' },
+    { code: 1, value: 'Thanh toán online' }
+]
+
+export const months = [
+    { code: '01', value: 'January' },
+    { code: '02', value: 'February' },
+    { code: '03', value: 'March' },
+    { code: '04', value: 'April' },
+    { code: '05', value: 'May' },
+    { code: '06', value: 'June' },
+    { code: '07', value: 'July' },
+    { code: '08', value: 'August' },
+    { code: '09', value: 'September' },
+    { code: '10', value: 'October' },
+    { code: '11', value: 'November' },
+    { code: '12', value: 'December' }
 ]

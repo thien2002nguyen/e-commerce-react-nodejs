@@ -3,7 +3,9 @@ const asyncHandler = require('express-async-handler')
 const data = require('../../data/ecommerce.json')
 const ProductCategory = require('../models/productCategory')
 const categoryData = require('../../data/cate_brand')
+const categoryBlog = require('../../data/cate_blog')
 const slugify = require('slugify')
+const BlogCategory = require('../models/blogCategory')
 
 const fn = async (product) => {
     await Product.create({
@@ -48,7 +50,23 @@ const insertCategory = asyncHandler(async (req, res) => {
     return res.status(200).json('Done')
 })
 
+const fn_blogcategory = async (cate) => {
+    await BlogCategory.create({
+        title: cate
+    })
+}
+
+const insertBlogCategory = asyncHandler(async (req, res) => {
+    const promises = []
+    for (let cate of categoryBlog) {
+        promises.push(fn_blogcategory(cate))
+    }
+    await Promise.all(promises)
+    return res.status(200).json('Done')
+})
+
 module.exports = {
     insertProduct,
     insertCategory,
+    insertBlogCategory,
 }

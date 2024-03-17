@@ -14,7 +14,7 @@ import { getCurrent } from 'store/user/asyncActions';
 const { FaUpload, GrDocumentUpdate } = icons
 
 const Personal = () => {
-    const dispath = useDispatch()
+    const dispatch = useDispatch()
     const { current } = useSelector(state => state.user)
     const { register, formState: { errors }, reset, handleSubmit, watch } = useForm()
     const [preview, setPreview] = useState({
@@ -59,12 +59,12 @@ const Personal = () => {
         for (let key of Object.entries(data)) {
             formData.append(key[0], key[1])
         }
-        dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
+        dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
         const response = await apiUpdateCurrent(formData)
-        dispath(showModal({ isShowModal: false, modalChildren: null }))
+        dispatch(showModal({ isShowModal: false, modalChildren: null }))
         if (response.success) {
             toast.success(response.mes)
-            dispath(getCurrent())
+            dispatch(getCurrent())
         }
         else {
             toast.error(response.mes)

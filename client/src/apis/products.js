@@ -39,3 +39,9 @@ export const apiAddVariant = (pid, data) => axios({
     method: 'put',
     data
 })
+
+export const apiUpdateQuantityProduct = (data) => axios({
+    url: '/product/quantity',
+    method: 'put',
+    data
+})

@@ -204,6 +204,29 @@ const addVariant = asyncHandler(async (req, res) => {
     })
 })
 
+const fnUpdateQuantity = async (product) => {
+    const response = await Product.findByIdAndUpdate(product.pid, {
+        quantity: product.quantity,
+        sold: product.sold
+    }, { new: true })
+    if (response.success) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+const updateQuantityProduct = asyncHandler(async (req, res) => {
+    const { products } = req.body
+    await Promise.all(products.map(element => fnUpdateQuantity(element)))
+    return res.status(200).json({
+        success: true,
+        mes: 'Updated'
+    })
+})
+
+
 module.exports = {
     createProduct,
     getProduct,
@@ -212,4 +235,5 @@ module.exports = {
     deleteProduct,
     ratings,
     addVariant,
+    updateQuantityProduct,
 }

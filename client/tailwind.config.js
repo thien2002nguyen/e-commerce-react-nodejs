@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        laptop: '1440px'
+      },
       fontFamily: {
         main: ['Poppins', 'sans-serif;']
       },
@@ -92,8 +95,8 @@ module.exports = {
         },
         'scale-up-br': {
           '0%': {
-            '-webkit-transform': 'scale(0.5);',
-            transform: 'scale(0.5);',
+            '-webkit-transform': 'scale(0);',
+            transform: 'scale(0);',
             '-webkit-transform-origin': '100% 100%;',
             'transform-origin': '100% 100%;',
           },
@@ -112,22 +115,36 @@ module.exports = {
             'transform-origin': '100% 100%;',
           },
           '100%': {
-            '-webkit-transform': 'scale(0.5);',
-            transform: 'scale(0.5);',
+            '-webkit-transform': 'scale(0);',
+            transform: 'scale(0);',
             '-webkit-transform-origin': '100% 100%;',
             'transform-origin': '100% 100%;',
           }
         },
         'scale-up-tl': {
           '0%': {
-            '-webkit-transform': 'scale(0.5);',
-            transform: 'scale(0.5);',
+            '-webkit-transform': 'scale(0);',
+            transform: 'scale(0);',
             '-webkit-transform-origin': '0% 0%;',
             'transform-origin': '0% 0%;',
           },
           '100%': {
             '-webkit-transform': 'scale(1);',
             transform: 'scale(1);',
+            '-webkit-transform-origin': '0% 0%;',
+            'transform-origin': '0% 0%;',
+          }
+        },
+        'un-scale-up-tl': {
+          '0%': {
+            '-webkit-transform': 'scale(1);',
+            transform: 'scale(1);',
+            '-webkit-transform-origin': '0% 0%;',
+            'transform-origin': '0% 0%;',
+          },
+          '100%': {
+            '-webkit-transform': 'scale(0);',
+            transform: 'scale(0);',
             '-webkit-transform-origin': '0% 0%;',
             'transform-origin': '0% 0%;',
           }
@@ -143,6 +160,7 @@ module.exports = {
         'scale-up-tl': 'scale-up-tl 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
         'scale-up-br': 'scale-up-br 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
         'un-scale-up-br': 'un-scale-up-br 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
+        'un-scale-up-tl': 'un-scale-up-tl 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;',
       },
       gridTemplateRows: {
         '10': 'repeat(10, minmax(0, 1fr))',

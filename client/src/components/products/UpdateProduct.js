@@ -12,7 +12,7 @@ import { apiUpdateProduct } from 'apis';
 const { FaUpload, MdOutlineExitToApp, GrDocumentUpdate } = icons
 
 const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
-    const dispath = useDispatch()
+    const dispatch = useDispatch()
     const { categories } = useSelector(state => state.app)
     const { register, formState: { errors }, reset, handleSubmit, watch } = useForm()
     const [payload, setPayload] = useState({
@@ -24,22 +24,22 @@ const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
     })
     useEffect(() => {
         reset({
-            title: editProduct?.title || '',
-            price: editProduct?.price || '',
-            quantity: editProduct?.quantity || '',
-            color: editProduct?.color || '',
-            category: editProduct?.category || '',
-            brand: editProduct?.brand?.toLowerCase() || '',
+            title: editProduct.title || '',
+            price: editProduct.price || '',
+            quantity: editProduct.quantity || '',
+            color: editProduct.color || '',
+            category: editProduct.category || '',
+            brand: editProduct.brand.toLowerCase() || '',
         })
         setPayload({
-            description: editProduct?.description?.length > 1 ?
-                `<ul>${editProduct?.description?.map(element =>
+            description: editProduct.description?.length > 1 ?
+                `<ul>${editProduct.description?.map(element =>
                     (`<li>${element}</li>`))}</ul>`.replaceAll('</li>,', '</li>')
-                : editProduct?.description[0]
+                : editProduct.description[0]
         })
         setPreview({
-            thumb: editProduct?.thumb || '',
-            images: editProduct?.images || []
+            thumb: editProduct.thumb || '',
+            images: editProduct.images || []
         })
     }, [editProduct, reset])
     const [invalidFields, setInvalidFields] = useState([])
@@ -113,9 +113,9 @@ const UpdateProduct = ({ editProduct, render, setEditProduct }) => {
             }
             delete finalPayload.thumb
             delete finalPayload.images
-            dispath(showModal({ isShowModal: true, modalChildren: <Loading /> }))
+            dispatch(showModal({ isShowModal: true, modalChildren: <Loading /> }))
             const response = await apiUpdateProduct(editProduct?._id, formData)
-            dispath(showModal({ isShowModal: false, modalChildren: null }))
+            dispatch(showModal({ isShowModal: false, modalChildren: null }))
             if (response.success) {
                 toast.success(response.mes)
                 render()
