@@ -348,3 +348,5 @@ export const months = [
     { code: '11', value: 'November' },
     { code: '12', value: 'December' }
 ]
+
+export const shippingFee = 0.99

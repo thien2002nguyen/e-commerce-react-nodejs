@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import { apiCart, apiCreateOrder, apiUpdateAddress, apiUpdateQuantityProduct } from 'apis';
 import { getCurrent } from 'store/user/asyncActions';
 import { toast } from 'react-toastify';
-import { paymentOptions } from 'ultils/contants';
+import { paymentOptions, shippingFee } from 'ultils/contants';
 import Swal from 'sweetalert2';
 import { showModal } from 'store/app/appSlice';
 
@@ -72,7 +72,7 @@ const Checkout = ({ navigate, dispatch }) => {
                         }
                         const response = await apiCreateOrder({
                             products: current?.cart,
-                            total: current?.cart?.reduce((sum, element) => element.price * element.quantity + sum, 0),
+                            total: current?.cart?.reduce((sum, element) => element.price * element.quantity + sum, 0) + shippingFee,
                             address: current?.address,
                             currentProduct
                         })
@@ -177,7 +177,7 @@ const Checkout = ({ navigate, dispatch }) => {
                             <Paypal
                                 payload={{
                                     products: current?.cart,
-                                    total: current?.cart?.reduce((sum, element) => element.price * element.quantity + sum, 0),
+                                    total: current?.cart?.reduce((sum, element) => element.price * element.quantity + sum, 0) + shippingFee,
                                     address: current?.address,
                                 }}
                                 amount={current?.cart?.reduce((sum, element) => element.price * element.quantity + sum, 0)}
@@ -219,11 +219,24 @@ const Checkout = ({ navigate, dispatch }) => {
                                 </div>
                             ))}
                         </div>
+                        <div className='text-sm flex flex-col gap-2'>
+                            <span className='flex justify-between items-center'>
+                                <span>Subtotal</span>
+                                <span>
+                                    {`$${formatMoney(current?.cart?.reduce((sum, element) =>
+                                        sum + Number(element.price) * (element.quantity || 1), 0) || 0)} USD`}
+                                </span>
+                            </span>
+                            <span className='flex justify-between items-center'>
+                                <span>Shipping fee</span>
+                                <span>{`${shippingFee} USD`}</span>
+                            </span>
+                        </div>
                         <div className='flex justify-between items-center'>
                             <span className='text-lg'>Total</span>
                             <span className='text-lg'>
                                 {`$${formatMoney(current?.cart?.reduce((sum, element) =>
-                                    sum + Number(element.price) * (element.quantity || 1), 0) || 0)} USD`}
+                                    sum + Number(element.price) * (element.quantity || 1), 0) + shippingFee || 0)} USD`}
                             </span>
                         </div>
                     </div>

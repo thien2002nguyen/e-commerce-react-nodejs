@@ -5,7 +5,8 @@ import withBaseComponent from 'hocs/withBaseComponent'
 import moment from 'moment'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { createSearchParams, useParams } from 'react-router-dom'
+import Swal from 'sweetalert2'
 import { months } from 'ultils/contants'
 import icons from 'ultils/icons'
 import path from 'ultils/path'
@@ -13,7 +14,7 @@ import path from 'ultils/path'
 const { BsDot, AiOutlineLike, AiOutlineDislike, FaArrowLeftLong } = icons
 
 const DetailBlog = ({ navigate, location }) => {
-    const { current } = useSelector(state => state.user)
+    const { current, isLoggedIn } = useSelector(state => state.user)
     const { bid, title } = useParams()
     const [dataBlog, setDataBlog] = useState(null)
     const [update, setUpdate] = useState(false)
@@ -34,32 +35,68 @@ const DetailBlog = ({ navigate, location }) => {
         window.scrollTo(0, 0)
     }, [bid])
     const handleLikeBlog = async () => {
-        if (dataBlog?.dislikes?.some(element => element._id === current?._id)) {
-            await apiDislikeBlog(bid)
-            const response = await apiLikeBlog(bid)
-            if (response.success) {
-                render()
-            }
+        if (!isLoggedIn) {
+            Swal.fire({
+                title: 'Oops!',
+                text: 'Please log in to like',
+                cancelButtonText: 'Not now',
+                confirmButtonText: 'Go login',
+                showCancelButton: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate({
+                        pathname: `/${path.LOGIN}`,
+                        search: createSearchParams({ redirect: location.pathname }).toString()
+                    })
+                }
+            })
         }
         else {
-            const response = await apiLikeBlog(bid)
-            if (response.success) {
-                render()
+            if (dataBlog?.dislikes?.some(element => element._id === current?._id)) {
+                await apiDislikeBlog(bid)
+                const response = await apiLikeBlog(bid)
+                if (response.success) {
+                    render()
+                }
+            }
+            else {
+                const response = await apiLikeBlog(bid)
+                if (response.success) {
+                    render()
+                }
             }
         }
     }
     const handleDisLikeBlog = async () => {
-        if (dataBlog?.likes?.some(element => element._id === current?._id)) {
-            await apiLikeBlog(bid)
-            const response = await apiDislikeBlog(bid)
-            if (response.success) {
-                render()
-            }
+        if (!isLoggedIn) {
+            Swal.fire({
+                title: 'Oops!',
+                text: 'Please log in to like',
+                cancelButtonText: 'Not now',
+                confirmButtonText: 'Go login',
+                showCancelButton: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate({
+                        pathname: `/${path.LOGIN}`,
+                        search: createSearchParams({ redirect: location.pathname }).toString()
+                    })
+                }
+            })
         }
         else {
-            const response = await apiDislikeBlog(bid)
-            if (response.success) {
-                render()
+            if (dataBlog?.likes?.some(element => element._id === current?._id)) {
+                await apiLikeBlog(bid)
+                const response = await apiDislikeBlog(bid)
+                if (response.success) {
+                    render()
+                }
+            }
+            else {
+                const response = await apiDislikeBlog(bid)
+                if (response.success) {
+                    render()
+                }
             }
         }
     }
@@ -103,7 +140,7 @@ const DetailBlog = ({ navigate, location }) => {
                         <span>Like</span>
                         <AiOutlineLike />
                     </button>
-                    <button className={`flex items-center gap-1 px-2 py-1 border text-gray-500
+                    <button className={`flex items-center gap-1 px-2 py-1 border
                     ${dataBlog?.dislikes?.some(element => element._id === current?._id) ?
                             'text-blue-600 border-blue-600' :
                             'text-gray-500'}
