@@ -43,9 +43,9 @@ const BestSeller = () => {
     return (
         <div>
             <div className='flex text-[20px] gap-4 border-main border-b-2 pb-4'>
-                {tabs.map((element, index) => (
+                {tabs.map((element) => (
                     <span
-                        key={index}
+                        key={element.id}
                         className={`font-semibold uppercase border-r pr-4 
                             cursor-pointer ${activedTab === element.id ? 'text-gray-600' : 'text-gray-400'}`}
                         onClick={() => setActivedTab(element.id)}

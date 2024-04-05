@@ -73,7 +73,7 @@ const Checkout = ({ navigate, dispatch }) => {
                         const response = await apiCreateOrder({
                             products: current?.cart,
                             total: current?.cart?.reduce((sum, element) => element.price * element.quantity + sum, 0) + shippingFee,
-                            address: current?.address,
+                            address: current?.address || watch('address'),
                             currentProduct
                         })
                         if (response.success) {

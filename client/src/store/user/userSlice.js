@@ -10,18 +10,19 @@ export const userSlice = createSlice({
         isLoading: false,
         errorMessage: '',
         currentCart: [],
-        refreshToken: null
+        refreshAccessToken: null
     },
     reducers: {
         login: (state, action) => {
             state.isLoggedIn = action.payload.isLoggedIn
             state.token = action.payload.token
-            state.refreshToken = action.payload.refreshToken
+            state.refreshAccessToken = action.payload.refreshToken
         },
         logout: (state) => {
             state.current = null
             state.isLoggedIn = false
             state.token = null
+            state.refreshAccessToken = null
             state.errorMessage = ''
         },
         clearErrorMessage: (state) => {
@@ -58,6 +59,7 @@ export const userSlice = createSlice({
             state.current = null
             state.isLoggedIn = false
             state.token = null
+            state.refreshAccessToken = null
             state.errorMessage = 'Login session has expired'
         });
     },

@@ -9,6 +9,7 @@ import Swal from 'sweetalert2'
 import { statusOrders } from 'ultils/contants'
 import { formatMoney } from 'ultils/helpers'
 import icons from 'ultils/icons'
+import path from 'ultils/path'
 
 const { FaCheck, RiDeleteBin5Fill, MdCancel } = icons
 
@@ -128,7 +129,7 @@ const History = ({ navigate, location }) => {
                     <span className='capitalize'>History</span>
                 </h1>
             </div>
-            <div className='pt-[92px] w-full px-4'>
+            {orders?.length > 0 && <div className='pt-[92px] w-full px-4'>
                 <div className='flex justify-end py-4 w-full'>
                     <CustomSelect
                         options={statusOrders}
@@ -146,6 +147,7 @@ const History = ({ navigate, location }) => {
                             <th className='p-2'>Status</th>
                             <th className='p-2'>Total</th>
                             <th className='p-2'>Created at</th>
+                            <th className='p-2'>Updated at</th>
                             <th className='p-2'>Actions</th>
                         </tr>
                     </thead>
@@ -174,6 +176,7 @@ const History = ({ navigate, location }) => {
                                 <td className='p-2 text-center'>{element.status}</td>
                                 <td className='p-2 text-center'>{`$${formatMoney(element.total)} USD`}</td>
                                 <td className='p-2 text-center'>{moment(element.createdAt)?.format("DD/MM/YYYY")}</td>
+                                <td className='p-2 text-center'>{moment(element.updatedAt)?.format("DD/MM/YYYY")}</td>
                                 <td className='p-2'>
                                     <div className='flex gap-2 justify-center'>
                                         {element.status.toLowerCase() === 'shipping' && <Button
@@ -206,7 +209,22 @@ const History = ({ navigate, location }) => {
                     </tbody>
                 </table>
                 <Pagination totalCount={counts} />
-            </div>
+            </div>}
+            {!orders?.length > 0 && <div className='flex flex-col items-center pt-[92px] pb-20 
+                text-gray-700'>
+                <span className='text-2xl font-semibold'>Your purchase history</span>
+                <span className='w-12 border-b border-black my-4'></span>
+                <span className='text-sm'>Your purchase history is currently empty</span>
+                <span className='text-sm mt-4'>
+                    <span>Continue browsing </span>
+                    <span className='cursor-pointer hover:text-main duration-150'
+                        onClick={() => {
+                            navigate(`/${path.PRODUCTS}`)
+                            window.scrollTo(0, 0)
+                        }}
+                    >here</span>
+                </span>
+            </div>}
         </div>
     )
 }

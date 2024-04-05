@@ -28,9 +28,9 @@ const FeatureProducts = ({ navigate }) => {
                 FEATURE PRODUCTS
             </h3>
             <div className='grid grid-cols-3 my-[15px] gap-[10px]'>
-                {products?.map((element, index) => (
+                {products?.map((element) => (
                     <ProductCard
-                        key={index}
+                        key={element._id}
                         productData={element}
                     />
                 ))}

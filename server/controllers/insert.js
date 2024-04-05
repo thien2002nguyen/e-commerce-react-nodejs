@@ -1,9 +1,9 @@
 const Product = require('../models/product')
 const asyncHandler = require('express-async-handler')
-const data = require('../../data/ecommerce.json')
+const data = require('../data/ecommerce.json')
 const ProductCategory = require('../models/productCategory')
-const categoryData = require('../../data/cate_brand')
-const categoryBlog = require('../../data/cate_blog')
+const categoryData = require('../data/cate_brand')
+const categoryBlog = require('../data/cate_blog')
 const slugify = require('slugify')
 const BlogCategory = require('../models/blogCategory')
 

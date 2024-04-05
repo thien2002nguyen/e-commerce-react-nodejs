@@ -32,8 +32,8 @@ const BlogPost = () => {
     return (
         <div>
             <Slider {...settings}>
-                {blogs?.map((element, index) => (
-                    <div key={index} className='px-2'>
+                {blogs?.map((element) => (
+                    <div key={element._id} className='px-2'>
                         <Link to={`/${path.BLOGS}/${element._id}/${element.title}`}>
                             <img src={element.image} alt="imageBlog" className='w-full' />
                         </Link>

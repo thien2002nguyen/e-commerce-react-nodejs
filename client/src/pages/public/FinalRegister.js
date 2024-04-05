@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import path from 'ultils/path';
 import Swal from 'sweetalert2';
 
 const FinalRegister = () => {
@@ -9,12 +8,12 @@ const FinalRegister = () => {
     useEffect(() => {
         if (status === 'failed') {
             Swal.fire('Oops!', 'Account registration failed', 'error').then(() => {
-                navigate(`/${path.LOGIN}`)
+                window.close()
             })
         }
         else {
             Swal.fire('Congratulation!', 'Account registration successful', 'success').then(() => {
-                navigate(`/${path.LOGIN}`)
+                window.close()
             })
         }
     }, [status, navigate])

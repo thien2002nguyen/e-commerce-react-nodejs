@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from 'store/user/userSlice';
 import { showModal } from 'store/app/appSlice';
 import Cart from 'components/products/Cart';
+import { FaFacebookSquare } from 'react-icons/fa';
 
 const { RiPhoneFill, MdEmail, BsHandbagFill, FaUserCircle, RiAdminLine, MdBroadcastOnPersonal, ImExit } = icons
 const Header = () => {
@@ -44,6 +45,13 @@ const Header = () => {
                         </span>
                         <span>Online Support 24/7</span>
                     </div>
+                    <a href='https://www.metatft.com/' className='flex flex-col px-6 items-center'>
+                        <span className='flex gap-4 items-center'>
+                            <FaFacebookSquare color='red' />
+                            <span className='font-semibold'>NGUYỄN CẢNH THIỆN</span>
+                        </span>
+                        <span>Meta TFT</span>
+                    </a>
                     {current && <Fragment>
                         <div
                             className='cursor-pointer flex items-center px-6 border-l justify-center gap-2'

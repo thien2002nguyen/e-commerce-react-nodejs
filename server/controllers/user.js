@@ -133,14 +133,12 @@ const getCurrent = asyncHandler(async (req, res) => {
 })
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
-    // lấy token từ cookies
-    const cookie = req.cookies
-    // check trong cookies có refresh token không
-    if (!cookie?.refreshToken) {
+    const { refreshToken } = req.body
+    if (!refreshToken) {
         throw new Error('No refresh token in cookies')
     }
     // check token có hợp lệ hay không
-    jwt.verify(cookie.refreshToken, process.env.JWT_SECRET, async (err, decode) => {
+    jwt.verify(refreshToken, process.env.JWT_SECRET, async (err, decode) => {
         if (err) {
             return res.status(401).json({
                 success: false,
@@ -148,7 +146,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             })
         }
         // check xem refreshToken có khớp với refreshToken trong database hay không
-        const response = await User.findOne({ _id: decode._id, refreshToken: cookie.refreshToken })
+        const response = await User.findOne({ _id: decode._id, refreshToken: refreshToken })
         return res.status(200).json({
             success: response ? true : false,
             newAccessToken: response ?

@@ -80,3 +80,9 @@ export const apiUpdateWishlist = (pid) => axios({
     url: '/user/wishlist/' + pid,
     method: 'put',
 })
+
+export const apiRefreshToken = (data) => axios({
+    url: '/user/refreshtoken',
+    method: 'post',
+    data
+})

@@ -40,8 +40,8 @@ const Cart = ({ dispatch, navigate }) => {
                 </header>
                 <section className='row-span-6 py-4 flex flex-col gap-4 h-full overflow-y-auto'>
                     {!current?.cart?.length > 0 && <span>Your cart is empty</span>}
-                    {current?.cart?.length > 0 && current?.cart?.map((element, index) => (
-                        <div key={index} className='flex justify-between items-center'>
+                    {current?.cart?.length > 0 && current?.cart?.map((element) => (
+                        <div key={element._id} className='flex justify-between items-center'>
                             <div className='flex gap-2'>
                                 <img src={element.thumb} alt="thumb" className='w-16 h-16 object-cover' />
                                 <div className='flex flex-col gap-2'>

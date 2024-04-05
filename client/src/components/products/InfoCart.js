@@ -31,9 +31,9 @@ const InfoCart = ({ dispatch, navigate }) => {
                 <div className='col-span-3 text-end w-full text-[18px] font-semibold'>TOTAL</div>
             </div>
             <div className='flex flex-col border-x'>
-                {currentCart?.map((element, index) => (
+                {currentCart?.map((element) => (
                     <OrderItem
-                        key={index}
+                        key={element._id}
                         element={element}
                     />
                 ))}
